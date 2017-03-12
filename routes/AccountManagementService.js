@@ -78,7 +78,8 @@ router.post('/hotel/users', function(req, res,next) {
         MongoClient.connect(url, function (err, db) {
             db.collection('User').insertOne(hotelUser).then(function (success) {
                 db.close();
-                res.status(201).end();
+                res.status(201);
+                res.json({"result":true});
             }, function (err) {
                 err = new Error("Username is already taken. Could Not add user to DB")
                 err.status=400;
