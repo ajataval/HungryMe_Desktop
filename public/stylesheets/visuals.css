@@ -5,7 +5,7 @@
   padding: 8% 0 0;
   margin: auto;
 }
-.form {
+.login-form {
   position: relative;
   z-index: 1;
   background: #FFFFFF;
@@ -58,10 +58,12 @@
   */
 }
 .container {
-  position: relative;
-  z-index: 1;
-  max-width: 300px;
-  margin: 0 auto;
+    display: table;
+    vertical-align: middle;
+}
+.vertical-center-row {
+    display: table-cell;
+    vertical-align: middle;
 }
 .container:before, .container:after {
   content: "";
