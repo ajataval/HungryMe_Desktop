@@ -1,25 +1,31 @@
-$('button').click(function(){
-	alert("entered");
-	var user = $('#user').val();
-	var pass = $('#pass').val();
-	var email= $('#em').val();
-	var formdata = {"username" : user,
-				"password" : pass,
-				"email" : email};
-				
-	alert(formdata);
-	$.ajax({
-		type : "POST",
-		url : "https://hungrymeser.herokuapp.com/hotel/user",
-		data : JSON.stringfy(formdata),
-		contentType: "application/json"
-	}).done(function(obj){
-		alert("sucess");
-	 }).fail(function(obj){
-		alert("Failed");
-	 });
+$(document).ready(function() {
+	$('#sigbut').click(function(){
+		alert("Clicked!");
+		var user = $('#user').val();
+		var pass = $('#pass').val();
+		var email= $('#em').val();
+		var formdata = {"username" : user,
+					"password" : pass,
+					"email" : email};
+					
+		$.ajax({
+			type : "POST",
+			url : "/hotel/users",
+			data : JSON.stringfy(formdata),
+			contentType: "application/json"
+		}).done(function(obj){
+			console.log(obj);
+			if(obj.status == 201){
+				alert("successfully created");}
+			else{
+				alert ("Error Creating Account");}
+		 }).fail(function(obj){
+			alert("Failed");
+		 });
+	});
 });
 
+/*
 document
 	.getElementById('target')
 	.addEventListener('change', function () {
@@ -33,3 +39,5 @@ document
 			target.className = 'vis';
 		}
 	});
+	
+	*/

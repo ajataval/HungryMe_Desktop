@@ -1,0 +1,28 @@
+<script>
+      $(document).ready(function() {
+          $('#login').click(function () {
+              alert("entered");
+              var user = $('#email').val();
+              var pass = $('#pwd').val();
+              $.ajax({
+                  type: "GET",
+                  url: "/hotel/users/"+user,
+                  contentType: "application/json"
+              }).done(function (obj) {
+                  console.log(obj.username);
+                  if (obj.username === undefined) {
+                      alert('Username is not present');
+                  }
+                  else if ( obj.password !== pass){
+                      alert('Password is invalid');
+                  }
+                  else{
+                      alert('Login Successful');
+                      window.location="dashboard.html"
+                  }
+              }).fail(function (obj) {
+                  alert("Failed");
+              });
+          });
+      });
+  </script>
