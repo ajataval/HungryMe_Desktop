@@ -143,6 +143,37 @@ router.post('/hotel/users', function(req, res,next) {
     }
 });
 
+
+//Add new Hotel User to MongoDB
+router.put('/hotel/users/:username', function(req, res,next) {
+    var user = req.params.username;
+    var newPassword = req.body.password;
+    console.log("New User Details is :: " + newPassword);
+    if(newPassword == undefined || newPassword == "") {
+        err = new Error("Request body is missing required parameter")
+        err.status=400;
+        next(err);
+    }
+    else {
+        MongoClient.connect(url, function (err, db) {
+            db.collection('User').updateOne({ username: user },
+                {
+                    $set: {"password": newPassword}
+                }).then(function (success) {
+                db.close();
+                res.status(200);
+                res.json({"result":true});
+            }, function (err) {
+                err = new Error("password could not be set in DB")
+                err.status=400;
+                db.close();
+                next(err);
+            });
+        });
+    }
+});
+
+
 //Get Hotel User by username from MongoDB
 router.get('/hotel/users/:username', function (req, res, next) {
     username = req.params.username;
