@@ -144,7 +144,7 @@ router.post('/hotel/users', function(req, res,next) {
 });
 
 
-//Add new Hotel User to MongoDB
+//Update Password for Hotel User to MongoDB
 router.put('/hotel/users/:username', function(req, res,next) {
     var user = req.params.username;
     var newPassword = req.body.password;
@@ -173,6 +173,34 @@ router.put('/hotel/users/:username', function(req, res,next) {
     }
 });
 
+//Update menu for given hotel to MongoDB
+router.put('/hotel/users/:username/menu', function(req, res,next) {
+    var user = req.params.username;
+    var newMenu = req.body.menu;
+    console.log("New menu is :: " + newMenu);
+    if(newMenu == undefined || newMenu == "") {
+        err = new Error("Request body is missing required parameter")
+        err.status=400;
+        next(err);
+    }
+    else {
+        MongoClient.connect(url, function (err, db) {
+            db.collection('User').updateOne({ username: user },
+                {
+                    $set: {"menu": newMenu}
+                }).then(function (success) {
+                db.close();
+                res.status(200);
+                res.json({"result":true});
+            }, function (err) {
+                err = new Error("menu could not be set in DB")
+                err.status=400;
+                db.close();
+                next(err);
+            });
+        });
+    }
+});
 
 //Get Hotel User by username from MongoDB
 router.get('/hotel/users/:username', function (req, res, next) {
