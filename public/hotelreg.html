@@ -6,9 +6,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
 	<script>
-
         $(document).ready(function() {
-
+            $('.message a').click(function () {
+                $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
+            });
             $('#reg').click(function () {
                 alert("entered");
                 var own = $('#oname').val();
@@ -23,13 +24,12 @@
                 var d1 = $('#d1').val();
                 var mi2 = $('#mi2').val();
                 var d2 = $('#d2').val();
-
                 var menuarray =[
-                {"name": mi1,
-                    "description": d1,},
-                {"name": mi2,
-                    "description" :d2}
-                ]
+                    {"name": mi1,
+                        "description": d1,},
+                    {"name": mi2,
+                        "description" :d2}
+                ];
                 var formdata = {
                     "hotelname": rest,
                     "username": own,
@@ -37,21 +37,20 @@
                     "address": add,
                     "cuisine": cuisine,
                     /*
-					"city": city,
-					"state": state,
-
-					"phone": pno,
-					"email":eid,
-					*/
+                     "city": city,
+                     "state": state,
+                     "phone": pno,
+                     "email":eid,
+                     */
                 };
-                console.log(formdata);
+                var input = JSON.stringify(formdata);
                 $.ajax({
                     type: "POST",
                     url: "/hotel/users",
-                    data: JSON.stringify(formdata),
+                    data: input,
                     contentType: "application/json"
                 }).done(function (obj) {
-                    if(obj.status == 201)
+                    if(obj.result == true)
                         alert("Success");
                     else
                         alert("Failure");
@@ -97,12 +96,13 @@
 	<img class ="picstyle" src="images/banner4.png" >
 </div>
 </br>
-<p class = "genwebsitetext">Change Password</p>
+<p class = "genwebsitetext">Restaurant Registration Form</p>
 </br>
 <div class="dashboard">
 <!-- Restaurant registration Code -->
 
-<form class="additemform">
+<!-- <form class="additemform"> -->
+    <div class="additemform">
 			<table id = "itemtable" >
 			<tr>
 				<td>Username</td>
@@ -136,13 +136,11 @@
 				<td>email adress</td>
 				<td><input type = "text" id = "eid"/></td>
 			</tr>
-			<tr><td></td></tr>
-			<tr>
-				<td></td>
-				<!--<td><button onclick="pageChanger(0, 1, pageContents)" id="next">next page</button></td>-->
-			</tr>
-
-				<tr>
+                <!--<tr>
+                    <td></td>
+                    <td><button onclick="pageChanger(0, 1, pageContents)" id="next">next page</button></td>
+			</tr>-->
+                <tr>
 				<td>Menu Item :</td>
 				<td><input type = "text" id = "mi1"></td>
 			</tr>
@@ -164,8 +162,9 @@
 				</tr>
 
 			</table>
+    </div>
 
-</form>
+<!-- </form> -->
 
 <!-- Restaurant registration Code Ends -->
 </div>
