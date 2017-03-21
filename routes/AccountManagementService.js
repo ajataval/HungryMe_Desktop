@@ -7,7 +7,9 @@ var router = express.Router();
 /*const monk = require('monk');
 const url = 'mongodb://serteam6:hungryme123@ds153179.mlab.com:53179/hungryme';
 const db = monk(url);*/
-
+var googleMapsClient = require('@google/maps').createClient({
+    key: process.env.GEOCODE_API
+});
 
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
@@ -63,6 +65,35 @@ router.get('/app/users/:username', function (req, res, next) {
             }, function (err) {
                 err = new Error("Server Error while searching for "+ username);
                 err.status=500;
+                db.close();
+                next(err);
+            });
+        });
+    }
+});
+
+//Update Password for App User to MongoDB
+router.put('/app/users/:username', function(req, res,next) {
+    var user = req.params.username;
+    var newPassword = req.body.password;
+    console.log("New User Details is :: " + newPassword);
+    if(newPassword == undefined || newPassword == "") {
+        err = new Error("Request body is missing required parameter")
+        err.status=400;
+        next(err);
+    }
+    else {
+        MongoClient.connect(url, function (err, db) {
+            db.collection('User').updateOne({ username: user },
+                {
+                    $set: {"password": newPassword}
+                }).then(function (success) {
+                db.close();
+                res.status(200);
+                res.json({"result":true});
+            }, function (err) {
+                err = new Error("password could not be set in DB")
+                err.status=400;
                 db.close();
                 next(err);
             });
@@ -128,6 +159,12 @@ router.post('/hotel/users', function(req, res,next) {
         next(err);
     }
     else {
+
+        for( i = 0 ; i< hotelUser.menu.length; i++){
+            hotelUser.menu[i].count = 0;
+            hotelUser.menu[i].review = 0;
+            hotelUser.menu[i].comments = [];
+        }
         MongoClient.connect(url, function (err, db) {
             db.collection('User').insertOne(hotelUser).then(function (success) {
                 db.close();
@@ -165,35 +202,6 @@ router.put('/hotel/users/:username', function(req, res,next) {
                 res.json({"result":true});
             }, function (err) {
                 err = new Error("password could not be set in DB")
-                err.status=400;
-                db.close();
-                next(err);
-            });
-        });
-    }
-});
-
-//Update menu for given hotel to MongoDB
-router.put('/hotel/users/:username/menu', function(req, res,next) {
-    var user = req.params.username;
-    var newMenu = req.body.menu;
-    console.log("New menu is :: " + newMenu);
-    if(newMenu == undefined || newMenu == "") {
-        err = new Error("Request body is missing required parameter")
-        err.status=400;
-        next(err);
-    }
-    else {
-        MongoClient.connect(url, function (err, db) {
-            db.collection('User').updateOne({ username: user },
-                {
-                    $set: {"menu": newMenu}
-                }).then(function (success) {
-                db.close();
-                res.status(200);
-                res.json({"result":true});
-            }, function (err) {
-                err = new Error("menu could not be set in DB")
                 err.status=400;
                 db.close();
                 next(err);
