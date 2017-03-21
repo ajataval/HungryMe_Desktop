@@ -226,3 +226,11 @@ body {
 .hidden {
   display: none;
 }
+
+.regform {
+  background: #FFFFFF;
+
+  margin: auto;
+  width: 30%;
+  padding: 10px;
+}

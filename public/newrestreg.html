@@ -1,0 +1,207 @@
+<head>
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <script>
+        google.load("jquery", "1.5");
+    </script>
+    <script type="text/javascript" src="javascripts/jquery.multipage.js"></script>
+
+    <link rel="stylesheet" href="stylesheets/visuals2.css" />
+
+    <script type="text/javascript">
+        $(window).ready(function() {
+            $('#multipage').multipage({transitionFunction:transition,stateFunction: textpages});
+            $('form').submit(function(){ alert("Submitted!"); return false;});
+        });
+
+        function generateTabs(tabs) {
+
+            html = '';
+            for (var i in tabs) {
+                tab = tabs[i];
+                html = html + '<li class="multipage_tab"><a href="#" onclick="return $(\'#multipage\').gotopage(' + tab.number + ');">' + tab.title + '</a></li>';
+            }
+            $('<ul class="multipage_tabs" id="multipage_tabs">'+html+'<div class="clearer"></div></ul>').insertBefore('#multipage');
+        }
+        function setActiveTab(selector,page) {
+            $('#multipage_tabs li').each(function(index){
+                if ((index+1)==page) {
+                    $(this).addClass('active');
+                } else {
+                    $(this).removeClass('active');
+                }
+            });
+        }
+
+        function transition(from,to) {
+            $(from).fadeOut('fast',function(){$(to).fadeIn('fast');});
+
+        }
+        function textpages(obj,page,pages) {
+            $(obj).html(page + ' of ' + pages);
+        }
+
+    </script>
+    <!-- Ajax Calls below-->
+    <script>
+        $(document).ready(function() {
+            $('.message a').click(function () {
+                $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
+            });
+            $('#reg').click(function () {
+                alert("entered");
+                var own = $('#oname').val();
+                var rest = $('#rname').val();
+                var add = $('#stadr').val();
+                var city = $('#city').val();
+                var state = $('#state').val();
+                var cuisine = $('#cuisine').val();
+                var pno = $('#pno').val();
+                var email = $('#eid').val();
+                var mi1 = $('#mi1').val();
+                var d1 = $('#d1').val();
+                var mi2 = $('#mi2').val();
+                var d2 = $('#d2').val();
+                var menuarray =[
+                    {"name": mi1,
+                        "description": d1,},
+                    {"name": mi2,
+                        "description" :d2}
+                ];
+                var formdata = {
+                    "hotelname": rest,
+                    "username": own,
+                    "menu": menuarray,
+                    "address": add,
+                    "cuisine": cuisine,
+                    /*
+                     "city": city,
+                     "state": state,
+                     "phone": pno,
+                     "email":eid,
+                     */
+                };
+                var input = JSON.stringify(formdata);
+                $.ajax({
+                    type: "POST",
+                    url: "/hotel/users",
+                    data: input,
+                    contentType: "application/json"
+                }).done(function (obj) {
+                    if(obj.result == true)
+                        alert("Success");
+                    else
+                        alert("Failure");
+                }).fail(function (obj) {
+                    alert("Failed");
+                });
+            });
+        });
+
+    </script>
+    <!-- End of Ajax calls code-->
+    <script>
+        jQuery(function(){
+            var counter = 2;
+            jQuery('a.add-item').click(function(event){
+                event.preventDefault();
+
+                var newRow = jQuery('<tr><td><input type="text" id="mi' +
+                    counter + '"/></td><td><input type="text" id="d' +
+                    counter + '"/></td></tr>');
+                counter++;
+                jQuery('table.menu-list').append(newRow);
+
+            });
+        });
+    </script>
+
+</head>
+
+<body>
+<div class="banner">
+    <img class ="picstyle" src="images/banner4.png" >
+</div>
+</br>
+<p class = "genwebsitetext">Hotel Registration form</p>
+</br>
+<div class="regform">
+    <div class="additemform">
+        <form id="multipage">
+            <fieldset id="page_one">
+                <legend>Restaurant Details</legend>
+                <!-- Restaurant registration Code -->
+
+                <table id = "itemtable" >
+                    <tr>
+                        <td>Username</td>
+                        <td><input type = "text" id = "oname"/></td>
+                    </tr>
+                    <tr>
+                        <td>Restaurant Name</td>
+                        <td><input type = "text" id = "rname"/></td>
+                    </tr>
+                    <tr>
+                        <td>Street Adress</td>
+                        <td><input type = "text" id = "stadr"/></td>
+                    </tr>
+                    <tr>
+                        <td>City</td>
+                        <td><input type = "text" id = "city"/></td>
+                    </tr>
+                    <tr>
+                        <td>State</td>
+                        <td><input type = "text" id = "state"/></td>
+                    </tr>
+                    <tr>
+                        <td>Cuisine Type</td>
+                        <td><input type = "text" id = "cuisine"/></td>
+                    </tr>
+                    <tr>
+                        <td>Phone Number</td>
+                        <td><input type = "text" id = "pno"/></td>
+                    </tr>
+                    <tr>
+                        <td>email adress</td>
+                        <td><input type = "text" id = "eid"/></td>
+                    </tr>
+                    <!--
+                    <tr>
+                        <td></td>
+                        <td><button onclick="pageChanger(/*0, 1, pageContents*/)" id="next">next page</button></td>
+                    </tr>
+                    -->
+
+
+
+                </table>
+
+
+            </fieldset>
+            <fieldset id="page_two">
+                <legend>Menu Details</legend>
+                <div>
+                    <table class="menu-list">
+                        <tr>
+                            <td>Menu Item</td><td>Description</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="text" id="mi1" />
+                            </td>
+                            <td>
+                                <input type="text" id="d1" />
+                            </td>
+                        </tr>
+                    </table>
+                    <a href="#" title="" class="add-item">Add Another Item</a>
+
+                </div>
+                <button type="submit" class="additembutton" id="reg">Register Restaurant</button>
+            </fieldset>
+
+        </form>
+    </div>
+
+</div>
+
+</body>

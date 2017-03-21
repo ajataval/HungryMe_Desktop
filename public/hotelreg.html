@@ -61,35 +61,8 @@
         });
 
 	</script>
-<!--
-    <script>
 
-        var pageContents = [
-            ['#oname', '#rname', '#stadr','#city', '#state', '#cuisine', '#pno','#eid'],
-            ['#mi1', '#d1','#mi2', '#d2']
-        ];
 
-        function classAssigner(element, classNameParam) {
-            //finds the element and assigns it the proper class, or an empty string
-            var curElement = document.querySelector(element);
-            curElement.className = classNameParam;
-        }
-
-        //this function gets called dueto the onclick attribute in the html on the button
-        function pageChanger(curPage, nextPage, pageContentArray) {
-            //calls classAssigner for each item in the curPage index of the pageContent array
-            pageContentArray[curPage].forEach(function(element) {
-                classAssigner(element, 'hidden')
-            });
-
-            //calls classAssigner for each item in the nextPage index of the pageContent array
-            pageContentArray[nextPage].forEach(function(element) {
-                classAssigner(element, '')
-            });
-        }
-
-    </script>
-    -->
 </head>
 <body>
 <div class="banner">
@@ -100,11 +73,10 @@
 </br>
 <div class="dashboard">
 <!-- Restaurant registration Code -->
-
-<!-- <form class="additemform"> -->
     <div class="additemform">
 			<table id = "itemtable" >
-			<tr>
+			<div id="pt1">
+                <tr>
 				<td>Username</td>
 				<td><input type = "text" id = "oname"/></td>
 			</tr>
@@ -136,10 +108,12 @@
 				<td>email adress</td>
 				<td><input type = "text" id = "eid"/></td>
 			</tr>
-                <!--<tr>
+                <tr>
                     <td></td>
-                    <td><button onclick="pageChanger(0, 1, pageContents)" id="next">next page</button></td>
-			</tr>-->
+                    <td><button onclick="pageChanger(/*0, 1, pageContents*/)" id="next">next page</button></td>
+			</tr>
+            </div>
+                <div id="pt2" class="hidden">
                 <tr>
 				<td>Menu Item :</td>
 				<td><input type = "text" id = "mi1"></td>
@@ -160,11 +134,11 @@
 					<td></td>
 					<td><button type="submit" class="additembutton" id="reg">Register Restaurant</button></td>
 				</tr>
+                </div>
 
 			</table>
     </div>
 
-<!-- </form> -->
 
 <!-- Restaurant registration Code Ends -->
 </div>
