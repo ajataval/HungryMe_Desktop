@@ -288,7 +288,9 @@ router.use('/search', function getHungryMeHotelList (req, res, next){
 // Get Hotels present in both list.
 router.use('/search', function getFilteredList (req, res, next){
 
-    var map = {}
+    var map = {};
+    res.filteredList = [];
+    res.filteredPlaces = [];
     var dblist = true
     // create a map with smaller list
     if( res.googleHotelList.length > res.hungryMeDbList.length){
@@ -311,28 +313,56 @@ router.use('/search', function getFilteredList (req, res, next){
             if(map[res.googleHotelList[i].place_id] !== undefined)
                 map[res.googleHotelList[i].place_id]++;
         }
-    }
-    else {
-        //iterate over hotel list
-        for ( i=0; i< res.hungryMeDbList.length; i++) {
-            if(map[res.hungryMeDbList[i].place_id] !== undefined)
-                map[res.hungryMeDbList[i].place_id]++;
+
+        for( i=0; i< res.hungryMeDbList.length; i++) {
+            if( map[res.hungryMeDbList[i].place_id] == 2) {
+                // match found. add to filtered list
+                res.filteredList.push(res.hungryMeDbList[i]);
+                res.filteredPlaces.push(res.hungryMeDbList[i].place_id);
+            }
         }
     }
-
-
-
-    console.log(map);
+    console.log(res.filteredList);
     next();
 });
 
+
+router.use('/search', function getDistance  (req, res, next){
+
+    var dest = "";
+    for (i=0; i< res.filteredPlaces.length; i++){
+        dest+="place_id:"+res.filteredPlaces[i]+"|";
+    }
+
+    dest = dest.substr(0,dest.length-1)
+    console.log("Length : " + dest.length + "  ::::  dest: " + dest);
+    //get distance from user current location to hotel
+    googleMapsClient.distanceMatrix({
+        origins: req.query.lat +','+ req.query.long,
+        destinations:dest,
+        units:"imperial"
+    }, function(err, geoResponse) {
+        if (!err) {
+            console.log(geoResponse.json.rows[0].elements);
+            res.googleDistanceList = geoResponse.json.rows[0].elements;
+
+            for( i=0; i < res.filteredList.length; i++){
+                res.filteredList[i].distance = res.googleDistanceList[i].distance.text;
+                res.filteredList[i].openNow = "true";
+            }
+            next();
+        }
+        else
+            next(err);
+    });
+});
 //Get List of Hotels based on user location and preferences
 router.get('/search', function (req, res, next) {
 
 
     var lat = req.query.lat;
     var long = req.query.long;
-    res.send(res.hungryMeDbList);
+    res.send(res.filteredList);
 });
 
 module.exports = router;
