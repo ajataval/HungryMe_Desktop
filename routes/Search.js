@@ -268,7 +268,7 @@ router.use('/search', function getHungryMeHotelList (req, res, next){
 
     if(req.query.cuisine !== undefined){
         //search by cuisine type
-        searchfilter = {"cuisine": req.query.cuisine};
+        searchfilter = {"cuisine": {$regex:".*"+ req.query.cuisine +".*", $options: 'i'}};
     }
     else if(req.query.menu !== undefined) {
         //search by specific menu
