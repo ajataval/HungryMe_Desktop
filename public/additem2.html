@@ -4,6 +4,7 @@
 	<title>Hotel Menu Update Page</title>
 	<link rel="stylesheet" href="stylesheets/visuals2.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<!--
 	<script>
         $(document).ready(function() {
             $('#fetchmenu').click(function (e) {
@@ -24,6 +25,47 @@
                 });
             });
         });
+	</script>
+	-->
+	<script>
+        function getCookie(cname) {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for(var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+        function checkCookie() {
+            var user=getCookie("username");
+            if (user != "") {
+                alert("Welcome again " + user);
+                $.ajax({
+                    type: "GET",
+                    url: "/hotel/users/"+user+"/menu",
+                    contentType: "application/json"
+                }).done(function (obj) {
+                    $('#mi1').val(obj.menu[0].name);
+                    $('#d1').val(obj.menu[0].description);
+                    $('#mi2').val(obj.menu[1].name);
+                    $('#d2').val(obj.menu[1].description);
+                }).fail(function (obj) {
+                    alert("Failed");
+                });
+            } else {
+                user = prompt("Please enter your name:","");
+                if (user != "" && user != null) {
+                    setCookie("username", user, 30);
+                }
+            }
+        }
 	</script>
 	<script>
         jQuery(function(){
@@ -46,7 +88,7 @@
 		display: none;
 	}
 </style>
-<body>
+<body onload="checkCookie()">
 <div class="banner">
 	<img class ="picstyle" src="images/banner4.png" >
 </div>
@@ -85,10 +127,7 @@
 			<div id="content_2" class="inv">
 				<form class="additemform">
 					<table id = "itemtable" class="menu-list">
-						<tr>
-							<th>Fetch Menu for <input type = "text" id="user"></th><td><button class="additembutton" id="fetchmenu">GO!</button></td>
-
-						</tr>
+						
 						<tr>
 							<td>Menu Item</td><td>Description</td>
 						</tr>

@@ -51,6 +51,7 @@
                 alert("entered");
                 var own = $('#oname').val();
                 var rest = $('#rname').val();
+                var pass = $('#pswd').val();
                 var add = $('#stadr').val();
                 var city = $('#city').val();
                 var state = $('#state').val();
@@ -70,6 +71,7 @@
                 var formdata = {
                     "hotelname": rest,
                     "username": own,
+                    "password": pass,
                     "menu": menuarray,
                     "address": add,
                     "cuisine": cuisine,
@@ -137,6 +139,10 @@
                         <td><input type = "text" id = "oname"/></td>
                     </tr>
                     <tr>
+                        <td>Username</td>
+                        <td><input type = "text" id = "pswd"/></td>
+                    </tr>
+                    <tr>
                         <td>Restaurant Name</td>
                         <td><input type = "text" id = "rname"/></td>
                     </tr>
@@ -166,7 +172,7 @@
                     </tr>
 
                 </table>
-                
+
             </fieldset>
             <fieldset id="page_two">
                 <legend>Menu Details</legend>
