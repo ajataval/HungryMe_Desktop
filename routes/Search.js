@@ -329,39 +329,41 @@ router.use('/search', function getFilteredList (req, res, next){
 
 router.use('/search', function getDistance  (req, res, next){
 
-    var dest = "";
-    for (i=0; i< res.filteredPlaces.length; i++){
-        dest+="place_id:"+res.filteredPlaces[i]+"|";
+    if(res.filteredList.length == 0){
+        next();
     }
+    else {
+        var dest = "";
 
-    dest = dest.substr(0,dest.length-1)
-    console.log("Length : " + dest.length + "  ::::  dest: " + dest);
-    //get distance from user current location to hotel
-    googleMapsClient.distanceMatrix({
-        origins: req.query.lat +','+ req.query.long,
-        destinations:dest,
-        units:"imperial"
-    }, function(err, geoResponse) {
-        if (!err) {
-            console.log(geoResponse.json.rows[0].elements);
-            res.googleDistanceList = geoResponse.json.rows[0].elements;
-
-            for( i=0; i < res.filteredList.length; i++){
-                res.filteredList[i].distance = res.googleDistanceList[i].distance.text;
-                res.filteredList[i].openNow = "true";
-            }
-            next();
+        for (i = 0; i < res.filteredPlaces.length; i++) {
+            dest += "place_id:" + res.filteredPlaces[i] + "|";
         }
-        else
-            next(err);
-    });
+
+        dest = dest.substr(0, dest.length - 1)
+        console.log("Length : " + dest.length + "  ::::  dest: " + dest);
+        //get distance from user current location to hotel
+        googleMapsClient.distanceMatrix({
+            origins: req.query.lat + ',' + req.query.long,
+            destinations: dest,
+            units: "imperial"
+        }, function (err, geoResponse) {
+            if (!err) {
+                console.log(geoResponse.json.rows[0].elements);
+                res.googleDistanceList = geoResponse.json.rows[0].elements;
+
+                for (i = 0; i < res.filteredList.length; i++) {
+                    res.filteredList[i].distance = res.googleDistanceList[i].distance.text;
+                    res.filteredList[i].openNow = "true";
+                }
+                next();
+            }
+            else
+                next(err);
+        });
+    }
 });
 //Get List of Hotels based on user location and preferences
 router.get('/search', function (req, res, next) {
-
-
-    var lat = req.query.lat;
-    var long = req.query.long;
     res.send(res.filteredList);
 });
 
