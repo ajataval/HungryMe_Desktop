@@ -1,138 +1,164 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Hotel Menu Update Page</title>
-<link rel="stylesheet" href="visuals.css">
-<script type="text/javascript" src="jscode.js"></script>
+	<title>Hotel Menu Update Page</title>
+	<link rel="stylesheet" href="stylesheets/visuals2.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script>
+        $(document).ready(function() {
+            $('#fetchmenu').click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var user = $('#user').val();
+                $.ajax({
+                    type: "GET",
+                    url: "/hotel/users/"+user+"/menu",
+                    contentType: "application/json"
+                }).done(function (obj) {
+                    $('#mi1').val(obj.menu[0].name);
+                    $('#d1').val(obj.menu[0].description);
+                    $('#mi2').val(obj.menu[1].name);
+                    $('#d2').val(obj.menu[1].description);
+                }).fail(function (obj) {
+                    alert("Failed");
+                });
+            });
+        });
+	</script>
+	<script>
+        jQuery(function(){
+            var counter = 2;
+            jQuery('a.add-item').click(function(event){
+                event.preventDefault();
+
+                var newRow = jQuery('<tr><td><input type="text" id="mi' +
+                    counter + '"/></td><td><input type="text" id="d' +
+                    counter + '"/></td></tr>');
+                counter++;
+                jQuery('table.menu-list').append(newRow);
+
+            });
+        });
+	</script>
 </head>
 <style>
-.inv {
-    display: none;
-}
+	.inv {
+		display: none;
+	}
 </style>
 <body>
 <div class="banner">
 	<img class ="picstyle" src="images/banner4.png" >
 </div>
-</br>
+<br/>
 <p class = "genwebsitetext">Update Restaurant menu</p>
-</br>
+<br/>
 <div class="additemform">
-<p></p>
+	<p></p>
 	<p>Please Select what you would like to do</p>
 	<select id="target">
-        <option value="">Select...</option>
-        <option value="content_1">Upload Excel Sheet</option>
-        <option value="content_2">Add Menu Item</option>
-        <option value="content_3">Delete Menu Item</option>
+		<option value="">Select...</option>
+		<option value="content_1">Upload Excel Sheet</option>
+		<option value="content_2">Add Menu Item</option>
+		<option value="content_3">Delete Menu Item</option>
 		<option value="content_4">Update Menu Item Price</option>
-    <select>
-		
-		</br></br></br>
-		<!-- Content 1 Start -->
-		<div id="content_1" class="inv">
-			<form class="additemform">
-			<div class = "uef">
-		<p> Upload Excel File </p>
-		<form class="additemform">
-			<input type = "file" name ="menuexcel">
-			<button class="additembutton">Upload Excel</button>
-		</form>
-		</br>
-	</div>
-			</form>
-		
-		</div>
-		<!-- Content 1 End-->
-		
-		<!-- Content 2 Start -->
-		<div id="content_2" class="inv">
-			<form class="additemform">
-			<table id = "itemtable" >
-			<tr class = "tableheading">
-				<th>Menu Item ID</th>
-				<th>Menu Item Name</th>
-				<th>Price</th>
-			</tr>
-			<tr>
-				<td><input type = "text"></td>
-				<td><input type = "text"></td>
-				<td><input type = "text"></td>
-			</tr>
-			<tr>
-				<td><input type = "text"></td>
-				<td><input type = "text"></td>
-				<td><input type = "text"></td>
-			</tr>
-			<tr><td></td></tr>
-			<tr>
-				<td></td>
-				<td><button class="additembutton">Update Menu</button></td>
-			</tr>
-			</table> 
-			</form>
-		
-		</div>
-		<!-- Content 2 End-->
-		
-		<!-- Content 3 Start -->
-		<div id="content_3" class="inv">
-			<form class="additemform">
-			<table id = "itemtable" >
-			<tr class = "tableheading">
-				<th>Menu Item ID</th>
-			</tr>
-			<tr>
-				<td><input type = "text"></td>
-			</tr>
-			<tr><td></td></tr>
-			<tr>
-				<td></td>
-				<td><button class="additembutton">Delete Item</button></td>
-			</tr>
-			</table> 
-			</form>
-		
-		</div>
-		<!-- Content 3 End-->
-		<!-- Content 4 Start -->
-		<div id="content_4" class="inv">
-			<form class="additemform">
-			<table id = "itemtable" >
-			<tr class = "tableheading">
-				<th>Menu Item ID</th>
-				<th>Menu Item Name</th>
-				<th>New Price</th>
-			</tr>
-			<tr>
-				<td><input type = "text"></td>
-				<td><input type = "text"></td>
-				<td><input type = "text"></td>
-			</tr>
-			<tr><td></td></tr>
-			<tr>
-				<td></td>
-				<td><button class="additembutton">Update Menu</button></td>
-			</tr>
-			</table> 
-			</form>
-		
-		</div>
-		<!-- Content 4 End-->
-	<script>
-            document
-                .getElementById('target')
-                .addEventListener('change', function () {
-                    'use strict';
-                    var vis = document.querySelector('.vis'),   
-                        target = document.getElementById(this.value);
-                    if (vis !== null) {
-                        vis.className = 'inv';
-                    }
-                    if (target !== null ) {
-                        target.className = 'vis';
-                    }
-            });
-    </script>
+		<select>
+
+			<br/><br/><br/>
+			<!-- Content 1 Start -->
+			<div id="content_1" class="inv">
+				<form class="additemform">
+					<div class = "uef">
+						<p> Upload Excel File </p>
+						<form class="additemform">
+							<input type = "file" name ="menuexcel">
+							<button class="additembutton">Upload Excel</button>
+						</form>
+						<br/>
+					</div>
+				</form>
+
+			</div>
+			<!-- Content 1 End-->
+
+			<!-- Content 2 Start -->
+			<div id="content_2" class="inv">
+				<form class="additemform">
+					<table id = "itemtable" class="menu-list">
+						<tr>
+							<th>Fetch Menu for <input type = "text" id="user"></th><td><button class="additembutton" id="fetchmenu">GO!</button></td>
+
+						</tr>
+						<tr>
+							<td>Menu Item</td><td>Description</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" id="mi1" />
+							</td>
+							<td>
+								<input type="text" id="d1" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" id="mi2" />
+							</td>
+							<td>
+								<input type="text" id="d2" />
+							</td>
+						</tr>
+						<tr><td><a href="#" title="" class="add-item">Add Another Item</a></td>
+						</tr>
+					</table>
+
+				</form>
+
+			</div>
+			<!-- Content 2 End-->
+
+			<!-- Content 3 Start -->
+			<div id="content_3" class="inv">
+				<form class="additemform">
+					<table id = "itemtable" >
+						<tr class = "tableheading">
+							<th>Menu Item ID</th>
+						</tr>
+						<tr>
+							<td><input type = "text"></td>
+						</tr>
+						<tr><td></td></tr>
+						<tr>
+							<td></td>
+							<td><button class="additembutton">Delete Item</button></td>
+						</tr>
+					</table>
+				</form>
+
+			</div>
+			<!-- Content 3 End-->
+			<!-- Content 4 Start -->
+			<div id="content_4" class="inv">
+				<form class="additemform">
+
+				</form>
+
+			</div>
+			<!-- Content 4 End-->
+			<script>
+                document
+                    .getElementById('target')
+                    .addEventListener('change', function () {
+                        'use strict';
+                        var vis = document.querySelector('.vis'),
+                            target = document.getElementById(this.value);
+                        if (vis !== null) {
+                            vis.className = 'inv';
+                        }
+                        if (target !== null ) {
+                            target.className = 'vis';
+                        }
+                    });
+			</script>
 </body>
 </html>
