@@ -2,7 +2,10 @@
  * Created by KD on 3/2/2017.
  */
 var express = require('express');
+//const fileUpload = require('express-fileupload');
 var router = express.Router();
+
+//router.use(fileUpload());
 
 /*const monk = require('monk');
 const url = 'mongodb://serteam6:hungryme123@ds153179.mlab.com:53179/hungryme';
@@ -14,8 +17,48 @@ var googleMapsClient = require('@google/maps').createClient({
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var ObjectId = require('mongodb').ObjectID;
-var url = 'mongodb://serteam6:hungryme123@ds153179.mlab.com:53179/hungryme';
+var url = process.env.MONGO_URL;
 
+
+//Update menu for given hotel to MongoDB using file
+router.post('/upload', function(req, res,next) {
+    //console.log(req.files.foo);
+
+    var user = req.params.username;
+    var newMenu = req.body.menu;
+
+    if(newMenu == undefined || newMenu == "") {
+        err = new Error("Request body is missing required parameter")
+        err.status=400;
+        next(err);
+    }
+    else {
+        for( i =0 ; i< newMenu.length; i++) {
+            if (newMenu[i].review == undefined) {
+                newMenu[i].count = 0;
+                newMenu[i].review = 0;
+                newMenu[i].comments = [];
+            }
+        }
+
+        console.log("New menu is :: " + newMenu);
+        MongoClient.connect(url, function (err, db) {
+            db.collection('User').updateOne({ username: user },
+                {
+                    $set: {"menu": newMenu}
+                }).then(function (success) {
+                db.close();
+                res.status(200);
+                res.json({"result":true});
+            }, function (err) {
+                err = new Error("menu could not be set in DB")
+                err.status=400;
+                db.close();
+                next(err);
+            });
+        });
+    }
+});
 
 //Update menu for given hotel to MongoDB
 router.put('/hotel/users/:username/menu', function(req, res,next) {

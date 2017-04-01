@@ -9,7 +9,7 @@ var googleMapsClient = require('@google/maps').createClient({
 });
 
 const monk = require('monk');
-const url = 'mongodb://serteam6:hungryme123@ds153179.mlab.com:53179/hungryme';
+const url = process.env.MONGO_URL;
 const db = monk(url);
 const collection =  db.get('User');
 

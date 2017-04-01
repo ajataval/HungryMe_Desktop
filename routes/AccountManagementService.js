@@ -14,7 +14,7 @@ var googleMapsClient = require('@google/maps').createClient({
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var ObjectId = require('mongodb').ObjectID;
-var url = 'mongodb://serteam6:hungryme123@ds153179.mlab.com:53179/hungryme';
+var url = process.env.MONGO_URL;
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -102,9 +102,9 @@ router.put('/app/users/:username', function(req, res,next) {
 });
 
 // login App User
-router.post('/app/login', function (req, res, next) {
-    username = req.body.username;
-    password = req.body.password;
+router.get('/app/login', function (req, res, next) {
+    username = req.query.username;
+    password = req.query.password;
     if (username == undefined || username == ""|| password == undefined || password == "") {
         err = new Error("Username/ Password cannot be empty");
         err.status = 400;
@@ -149,6 +149,21 @@ router.post('/app/login', function (req, res, next) {
 });
 
 
+router.post('/hotel/users', function(req, res,next){
+
+    console.log(req.body.address);
+    googleMapsClient.placesAutoComplete({
+        input: req.body.hotelname+','+req.body.address,
+        type:"establishment"
+    }, function(err, response) {
+        if (!err) {
+            console.log(response.json.results);
+            req.body.place_id = response.json.predictions[0].place_id;
+            next();
+        }
+    });
+
+});
 //Add new Hotel User to MongoDB
 router.post('/hotel/users', function(req, res,next) {
     var hotelUser = req.body;

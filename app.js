@@ -9,8 +9,8 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var acctMgmtSvc = require('./routes/AccountManagementService');
 var search = require('./routes/Search');
-var menuReview = require('./routes/MenuAndReviewManagement')
-
+var menuReview = require('./routes/MenuAndReviewManagement');
+var notification = require('./routes/Notification');
 var app = express();
 
 // view engine setup
@@ -30,6 +30,7 @@ app.use('/users', users);
 app.use('/', acctMgmtSvc);
 app.use('/', search);
 app.use('/', menuReview);
+app.use('/', notification);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
