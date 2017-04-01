@@ -157,7 +157,7 @@ router.use('/hotel/users/:username/menu/:menuname', function getMenuDetail(req, 
 });
 
 //post a review for a menu item
-router.put('/hotel/users/:username/menu/:menuname', function(req, res,next) {
+router.put('/hotel/users/:username/menu/:menuname', function updateMenuReview(req, res,next) {
     var user_review = req.body.review;
     var comment = req.body.comment;
 
@@ -194,8 +194,7 @@ router.put('/hotel/users/:username/menu/:menuname', function(req, res,next) {
 
         ).then(function (success) {
             db.close();
-            res.status(200);
-            res.json({"result":true});
+            next();
         }, function (err) {
             console.log(err);
             err = new Error("menu could not be set in DB")
@@ -207,4 +206,27 @@ router.put('/hotel/users/:username/menu/:menuname', function(req, res,next) {
 
 
 });
+
+//post a review for a menu item
+router.put('/hotel/users/:username/menu/:menuname', function (req, res,next) {
+    var username = req.params.username;
+
+    //call mongodb
+    MongoClient.connect(url, function (err, db) {
+        db.collection('User').findOne({"username":username}).then(function (success) {
+            if(success == undefined)
+                success = {};
+            db.close();
+            res.status(200);
+            res.json(success)
+        }, function (err) {
+            err = new Error("Server Error while searching for "+ username);
+            err.status=500;
+            db.close();
+            next(err);
+        });
+    });
+});
+
+
 module.exports = router;
