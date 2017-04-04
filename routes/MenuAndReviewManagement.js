@@ -2,63 +2,81 @@
  * Created by KD on 3/2/2017.
  */
 var express = require('express');
-//const fileUpload = require('express-fileupload');
 var router = express.Router();
-
-//router.use(fileUpload());
-
-/*const monk = require('monk');
-const url = 'mongodb://serteam6:hungryme123@ds153179.mlab.com:53179/hungryme';
-const db = monk(url);*/
+var multer  = require('multer')
+var upload = multer({ dest: 'uploads/' })
+const csv=require('csvtojson')
+var fs = require('fs');
 var googleMapsClient = require('@google/maps').createClient({
     key: process.env.GEOCODE_API
 });
+
 
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var ObjectId = require('mongodb').ObjectID;
 var url = process.env.MONGO_URL;
 
-
 //Update menu for given hotel to MongoDB using file
-router.post('/upload', function(req, res,next) {
-    //console.log(req.files.foo);
+router.post('/hotel/users/:username/uploadMenu', upload.single('foo'), function parseCSVtoJSON(req, res,next) {
+    // next function in the process to update menu will be called after upload function from csv package uploads
+    // file to temporary folder.
+    console.log(req.file);
 
-    var user = req.params.username;
-    var newMenu = req.body.menu;
+    req.newMenu = [];
+    csvFilePath=req.file.path;
+    csv()
+        .fromFile(csvFilePath)
+        // on event"json" i.e a row is read from csv and converted to JSON Recipe object
+        .on('json',function (jsonObj){
+            req.newMenu.push(jsonObj)
+            console.log(jsonObj)
+        })
+        // on event "end" i.e all rows from csv have been read and csv reader will now exit block.
+        .on('done',function(error){
+            console.log("File read!!!!!!!!!!!!")
+            next();
+        })
+        //next();
+    }, function updateInDB(req, res,next) {
+            // last function in the call change to upload menu
+            user = req.params.username
+            newMenu = req.newMenu
 
-    if(newMenu == undefined || newMenu == "") {
-        err = new Error("Request body is missing required parameter")
-        err.status=400;
-        next(err);
-    }
-    else {
-        for( i =0 ; i< newMenu.length; i++) {
-            if (newMenu[i].review == undefined) {
-                newMenu[i].count = 0;
-                newMenu[i].review = 0;
-                newMenu[i].comments = [];
-            }
-        }
-
-        console.log("New menu is :: " + newMenu);
-        MongoClient.connect(url, function (err, db) {
-            db.collection('User').updateOne({ username: user },
-                {
-                    $set: {"menu": newMenu}
-                }).then(function (success) {
-                db.close();
-                res.status(200);
-                res.json({"result":true});
-            }, function (err) {
-                err = new Error("menu could not be set in DB")
+            if(req.newMenu == undefined || req.newMenu.length == 0) {
+                err = new Error("Request body is missing required parameter")
                 err.status=400;
-                db.close();
                 next(err);
-            });
+            }
+            else {
+                for( i =0 ; i< newMenu.length; i++) {
+                    if (newMenu[i].review == undefined) {
+                        newMenu[i].count = 0;
+                        newMenu[i].review = 0;
+                        newMenu[i].comments = [];
+                    }
+                }
+
+                console.log("New menu is :: " + newMenu);
+                MongoClient.connect(url, function (err, db) {
+                    db.collection('User').updateOne({ username: user },
+                        {
+                            $set: {"menu": newMenu}
+                        }).then(function (success) {
+                        // close DB and remove the file used for upload
+                        db.close();
+                        fs.unlinkSync(req.file.path);
+                        res.status(200);
+                        res.json({"result":true});
+                    }, function (err) {
+                        err = new Error("menu could not be set in DB")
+                        err.status=400;
+                        db.close();
+                        next(err);
+                    });
+                });
+            }
         });
-    }
-});
 
 //Update menu for given hotel to MongoDB
 router.put('/hotel/users/:username/menu', function(req, res,next) {
