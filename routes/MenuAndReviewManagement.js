@@ -188,7 +188,7 @@ router.put('/hotel/users/:username/menu/:menuname', function updateMenuReview(re
     else
         newReview = res.curr_menu.review;
 
-    if( comment !== undefined){
+    if( comment !== undefined && comment !== ""){
         res.curr_menu.comments.push(comment);
     }
 
