@@ -11,6 +11,10 @@ var googleMapsClient = require('@google/maps').createClient({
     key: process.env.GEOCODE_API
 });
 
+var nodemailer = require('nodemailer');
+const uuidV4 = require('uuid/v4')
+const path = require('path');
+
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var ObjectId = require('mongodb').ObjectID;
@@ -174,7 +178,7 @@ router.post('/hotel/users', function(req, res,next) {
         next(err);
     }
     else {
-
+        hotelUser.resetToken = "";
         for( i = 0 ; i< hotelUser.menu.length; i++){
             hotelUser.menu[i].count = 0;
             hotelUser.menu[i].review = 0;
@@ -196,6 +200,106 @@ router.post('/hotel/users', function(req, res,next) {
 });
 
 
+//send password Change Email to user
+router.post('/hotel/users/:username/email', function getResetToken(req, res,next){
+    var user = req.params.username;
+
+    console.log("New User Details is :: " + user);
+    req.resetToken = uuidV4();
+
+    MongoClient.connect(url, function (err, db) {
+        db.collection('User').updateOne({ username: user },
+            {
+                $set: {"resetToken": req.resetToken}
+            }).then(function (success) {
+            db.close();
+            next();
+        }, function (err) {
+            err = new Error("Token could not be set in DB")
+            err.status=400;
+            console.log(err);
+            db.close();
+            next(err);
+        });
+    });
+},function sendEmail(req, res,next) {
+    var user = req.params.username;
+
+    console.log("New User Details is :: " + user);
+    var transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+            user: 'teamhungryme@gmail.com', // Your email id
+            pass: 'serteam6' // Your password
+        }
+    });
+    var mailOptions = {
+        from: 'teamhungryme@gmail.com', // sender address
+        to: user, // list of receivers
+        subject: 'Password Reset', // Subject line
+        text: "Please click on below link to reset password", // plaintext body
+        html: '<h1>Please click on below link to reset password</h1><br><br>'+
+        '<a href=\'http://'+req.headers.host+'/hotel/users/'+user+'/resetpassword/'+ req.resetToken+'\'><h2>Change Password</h2></a>' // You can choose to send an HTML body instead
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+        if(error){
+            console.log(error);
+            res.json({result: true});
+        }else{
+            console.log('Message sent: ' + info.response);
+            res.json({result: true});
+        };
+    });
+
+});
+
+// validate resetpassword token and send to password update page
+router.get('/hotel/users/:username/resetpassword/:resetToken', function (req, res, next) {
+    username = req.params.username;
+    usertoken = req.params.resetToken;
+    if (username == undefined || username == ""|| usertoken == undefined || usertoken == "") {
+        err = new Error("Username/ Token cannot be empty");
+        err.status = 400;
+        next(err);
+    }
+    else {
+        //call mongodb
+        MongoClient.connect(url, function (err, db) {
+            db.collection('User').findOne({"username":username}).then(function (success) {
+                console.log(success);
+
+                if(success == undefined) {
+                    //username not present
+                    db.close();
+                    res.status(401);
+                    res.send("Token mismatch. Cannot reset password.")
+                }
+                else if( usertoken !== success.resetToken) {
+                    //token does not match
+                    db.close();
+                    res.status(401);
+                    res.send("Token mismatch. Cannot reset password.")
+                }
+                else {
+                    //user authentication successful
+                    db.close();
+                    //res.redirect("http://"+ req.headers.host+"/UpdatePassword.ejs")
+                    res.render('UpdatePassword', { user: username }, function(err, html) {
+                        res.send(html);
+                    });
+                }
+
+            }, function (err) {
+                err = new Error("Server Error while searching for "+ username);
+                err.status=500;
+                db.close();
+                next(err);
+            });
+        });
+    }
+});
+
 //Update Password for Hotel User to MongoDB
 router.put('/hotel/users/:username', function(req, res,next) {
     var user = req.params.username;
@@ -210,7 +314,7 @@ router.put('/hotel/users/:username', function(req, res,next) {
         MongoClient.connect(url, function (err, db) {
             db.collection('User').updateOne({ username: user },
                 {
-                    $set: {"password": newPassword}
+                    $set: {"password": newPassword,"resetToken":""}
                 }).then(function (success) {
                 db.close();
                 res.status(200);
