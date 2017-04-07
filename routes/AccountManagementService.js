@@ -229,8 +229,8 @@ router.post('/hotel/users/:username/email', function getResetToken(req, res,next
     var transporter = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
-            user: 'teamhungryme@gmail.com', // Your email id
-            pass: 'serteam6' // Your password
+            user: process.env.TEAM_MAIL, // Your email id
+            pass: process.env.TEAM_PASS // Your password
         }
     });
     var mailOptions = {
