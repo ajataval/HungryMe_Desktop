@@ -7,9 +7,6 @@ var multer  = require('multer')
 var upload = multer({ dest: 'uploads/' })
 const csv=require('csvtojson')
 var fs = require('fs');
-var googleMapsClient = require('@google/maps').createClient({
-    key: process.env.GEOCODE_API
-});
 
 
 var MongoClient = require('mongodb').MongoClient;
@@ -18,7 +15,8 @@ var ObjectId = require('mongodb').ObjectID;
 var url = process.env.MONGO_URL;
 
 //Update menu for given hotel to MongoDB using file
-router.post('/hotel/users/:username/uploadMenu', upload.single('foo'), function parseCSVtoJSON(req, res,next) {
+router.post('/hotel/users/:username/uploadMenu', upload.single('foo'),
+    function parseCSVtoJSON(req, res,next) {
     // next function in the process to update menu will be called after upload function from csv package uploads
     // file to temporary folder.
     console.log(req.file);
@@ -38,7 +36,8 @@ router.post('/hotel/users/:username/uploadMenu', upload.single('foo'), function 
             next();
         })
         //next();
-    }, function updateInDB(req, res,next) {
+    },
+    function updateInDB(req, res,next) {
             // last function in the call change to upload menu
             user = req.params.username
             newMenu = req.newMenu
@@ -78,7 +77,7 @@ router.post('/hotel/users/:username/uploadMenu', upload.single('foo'), function 
             }
         });
 
-//Update menu for given hotel to MongoDB
+//Update menu for given hotel to MongoDB from UI
 router.put('/hotel/users/:username/menu', function(req, res,next) {
     var user = req.params.username;
     var newMenu = req.body.menu;
@@ -137,7 +136,7 @@ router.get('/hotel/users/:username/menu', function(req, res,next) {
 });
 
 
-router.use('/hotel/users/:username/menu/:menuname', function getMenuDetail(req, res,next) {
+var getMenuDetail = function (req, res,next) {
     var username = req.params.username;
     var menuname = req.params.menuname;
 
@@ -172,17 +171,17 @@ router.use('/hotel/users/:username/menu/:menuname', function getMenuDetail(req, 
         });
     });
 
-});
+}
 
 //post a review for a menu item
-router.put('/hotel/users/:username/menu/:menuname', function updateMenuReview(req, res,next) {
+router.put('/hotel/users/:username/menu/:menuname', getMenuDetail,function updateMenuReview(req, res,next) {
     var user_review = req.body.review;
     var comment = req.body.comment;
 
     if( user_review !== undefined) {
         res.curr_menu.count += 1;
         newReview = res.curr_menu.review + (user_review - res.curr_menu.review) / res.curr_menu.count;
-        res.curr_menu.review = Math.ceil(newReview);
+        res.curr_menu.review = Math.round(newReview);
 
     }
     else

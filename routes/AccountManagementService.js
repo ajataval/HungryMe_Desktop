@@ -4,20 +4,22 @@
 var express = require('express');
 var router = express.Router();
 
-/*const monk = require('monk');
-const url = 'mongodb://serteam6:hungryme123@ds153179.mlab.com:53179/hungryme';
-const db = monk(url);*/
+//to procure placeID for hotels
 var googleMapsClient = require('@google/maps').createClient({
     key: process.env.GEOCODE_API
 });
 
+
+// Dependencies to generate and send email for password reset for hotel user
 var nodemailer = require('nodemailer');
-const uuidV4 = require('uuid/v4')
+var uuidV4 = require('uuid/v4');
+
 const path = require('path');
 
+// Mongo libraries to connect to MongoLabs
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
-var ObjectId = require('mongodb').ObjectID;
+var ObjectId = require('mongodb').ObjectIDa;
 var url = process.env.MONGO_URL;
 
 /* GET users listing. */
@@ -25,7 +27,7 @@ router.get('/', function(req, res, next) {
     res.send('respond with a User resource');
 });
 
-//Add new App User to MongoDB
+/* Add new App User to MongoDB. */
 router.post('/app/users', function(req, res,next) {
     var new_user = req.body;
     console.log(new_user);
@@ -37,8 +39,8 @@ router.post('/app/users', function(req, res,next) {
     else {
         MongoClient.connect(url, function (err, db) {
             db.collection('User').insertOne(new_user).then(function (success) {
-               db.close();
-               res.status(201).end();
+                db.close();
+                res.status(201).end();
             }, function (err) {
                 err = new Error("Username is already taken. Could Not add user to DB")
                 err.status=400;
@@ -49,18 +51,12 @@ router.post('/app/users', function(req, res,next) {
     }
 });
 
-//Get App User by username from MongoDB
+/* Get App User by username from MongoDB. */
 router.get('/app/users/:username', function (req, res, next) {
-    username = req.params.username;
-    if (username == undefined) {
-        err = new Error("Username cannot be empty");
-        err.status = 400;
-        next(err);
-    }
-    else {
-        //call mongodb
-        MongoClient.connect(url, function (err, db) {
-            db.collection('User').findOne({"username":username}).then(function (success) {
+    var username = req.params.username;
+    MongoClient.connect(url, function (err, db) {
+        db.collection('User').findOne({"username":username})
+            .then(function (success) {
                 if(success == undefined)
                     success = {};
                 db.close();
@@ -72,17 +68,17 @@ router.get('/app/users/:username', function (req, res, next) {
                 db.close();
                 next(err);
             });
-        });
-    }
+    });
 });
 
-//Update Password for App User to MongoDB
+/* Update Password for App User to MongoDB. */
 router.put('/app/users/:username', function(req, res,next) {
     var user = req.params.username;
     var newPassword = req.body.password;
-    console.log("New User Details is :: " + newPassword);
+
+    //console.log("New User Details is :: " + newPassword);
     if(newPassword == undefined || newPassword == "") {
-        err = new Error("Request body is missing required parameter")
+        err = new Error("Request body is missing password parameter")
         err.status=400;
         next(err);
     }
@@ -97,7 +93,7 @@ router.put('/app/users/:username', function(req, res,next) {
                 res.json({"result":true});
             }, function (err) {
                 err = new Error("password could not be set in DB")
-                err.status=400;
+                err.status=500;
                 db.close();
                 next(err);
             });
@@ -105,7 +101,7 @@ router.put('/app/users/:username', function(req, res,next) {
     }
 });
 
-// login App User
+/* Login App User. */
 router.get('/app/login', function (req, res, next) {
     username = req.query.username;
     password = req.query.password;
@@ -118,18 +114,22 @@ router.get('/app/login', function (req, res, next) {
         //call mongodb
         MongoClient.connect(url, function (err, db) {
             db.collection('User').findOne({"username":username}).then(function (success) {
-                //console.log(success);
-
                 if(success == undefined) {
                     //username not present
-                    success ={"result" : false};
+                    success ={
+                        "result" : false,
+                        "message": "Username does not exist"
+                    };
                     db.close();
                     res.status(401);
                     res.json(success)
                 }
                 else if( password !== success.password) {
                     //password does not match
-                    success ={"result" : false};
+                    success ={
+                        "result" : false,
+                        "message": "Password does not match with system"
+                    };
                     db.close();
                     res.status(401);
                     res.json(success)
@@ -152,24 +152,54 @@ router.get('/app/login', function (req, res, next) {
     }
 });
 
+/* Middleware : Gets PlaceID from google API for new hotel.
+    * Uses Google PlaceAutoComplete API */
+var getHotelPlaceID = function(req, res, next){
+    //console.log(req.body.address);
+    if(req.body.address == undefined || req.body.address == ""
+        || req.body.hotelname == undefined || req.body.hotelname == "") {
+        err = new Error("Hotel Address / Hotel Name cannot be empty");
+        err.status = 400;
+        next(err);
+    }
+    else {
+        googleMapsClient.placesAutoComplete({
+            input: req.body.hotelname + ',' + req.body.address,
+            type: "establishment"
+        }, function (err, response) {
+            if (!err) {
+                //console.log(response.json.results);
+                if( response.json.status == "OK") {
+                    req.body.place_id = response.json.predictions[0].place_id;
+                    next();
+                }
+                else if(response.json.status == "ZERO_RESULTS") {
+                    err = new Error("Hotel address could not be validated.");
+                    err.status = 400;
+                    next(err);
+                }
+                else {
+                    console.log(response);
+                    err = new Error("There was an error on the server.");
+                    err.status = 503;
+                    next(err);
+                }
+            }
+            else {
+                console.log(err);
+                next(err);
+            }
+        });
+    }
 
-router.post('/hotel/users', function(req, res,next){
+}
 
-    console.log(req.body.address);
-    googleMapsClient.placesAutoComplete({
-        input: req.body.hotelname+','+req.body.address,
-        type:"establishment"
-    }, function(err, response) {
-        if (!err) {
-            console.log(response.json.results);
-            req.body.place_id = response.json.predictions[0].place_id;
-            next();
-        }
-    });
-
-});
-//Add new Hotel User to MongoDB
-router.post('/hotel/users', function(req, res,next) {
+/* Add new Hotel User to MongoDB.
+    * On POST request :
+    * 1) get hotel's placeID
+    * 2) add review parameters to recipes for new hotel
+    * 3) persist Hotel in mongodb */
+router.post('/hotel/users', getHotelPlaceID, function(req, res,next) {
     var hotelUser = req.body;
     console.log(hotelUser);
     if(hotelUser.username == undefined) {
@@ -177,12 +207,19 @@ router.post('/hotel/users', function(req, res,next) {
         err.status=400;
         next(err);
     }
-    else {
+    else if(hotelUser.place_id == undefined){
+        err = new Error("Hotel missing placeID parameter. Something is wrong on server with Place verification module");
+        err.status=500;
+        next(err);
+    }
+    else{
         hotelUser.resetToken = "";
-        for( i = 0 ; i< hotelUser.menu.length; i++){
-            hotelUser.menu[i].count = 0;
-            hotelUser.menu[i].review = 0;
-            hotelUser.menu[i].comments = [];
+        if( hoteluser.menu !== undefined) {
+            for (i = 0; i < hotelUser.menu.length; i++) {
+                hotelUser.menu[i].count = 0;
+                hotelUser.menu[i].review = 0;
+                hotelUser.menu[i].comments = [];
+            }
         }
         MongoClient.connect(url, function (err, db) {
             db.collection('User').insertOne(hotelUser).then(function (success) {
@@ -199,16 +236,16 @@ router.post('/hotel/users', function(req, res,next) {
     }
 });
 
-
-//send password Change Email to user
-router.post('/hotel/users/:username/email', function getResetToken(req, res,next){
+/* Middleware: Generates a new password reset token and updatesDB with this token*/
+var getResetToken = function getResetToken(req, res,next){
     var user = req.params.username;
-
-    console.log("New User Details is :: " + user);
     req.resetToken = uuidV4();
 
+    console.log("New User Details is :: " + user);
+    console.log("New User Details is :: " + req.resetToken);
+
     MongoClient.connect(url, function (err, db) {
-        db.collection('User').updateOne({ username: user },
+        db.collection('User').update({ username: user },
             {
                 $set: {"resetToken": req.resetToken}
             }).then(function (success) {
@@ -222,31 +259,42 @@ router.post('/hotel/users/:username/email', function getResetToken(req, res,next
             next(err);
         });
     });
-},function sendEmail(req, res,next) {
+}
+
+/*Send Email with reset password link
+    *On POST:
+      * 1) Get a new password reset token for this user account
+      * 2) Send an Email to the user. Email will contain the password reset link */
+router.post('/hotel/users/:username/email', getResetToken, function sendEmail(req, res,next) {
     var user = req.params.username;
 
-    console.log("New User Details is :: " + user);
+    //console.log("New User Details is :: " + user);
     var transporter = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
-            user: process.env.TEAM_MAIL, // Your email id
-            pass: process.env.TEAM_PASS // Your password
+            user: process.env.TEAM_MAIL,
+            pass: process.env.TEAM_PASS
         }
     });
+
     var mailOptions = {
-        from: 'teamhungryme@gmail.com', // sender address
+        from: process.env.TEAM_MAIL, // sender address
         to: user, // list of receivers
-        subject: 'Password Reset', // Subject line
-        text: "Please click on below link to reset password", // plaintext body
+        subject: 'Password reset for HungryMe', // Subject line
+        text: "Please click on below link to reset password",
         html: '<h1>Please click on below link to reset password</h1><br><br>'+
-        '<a href=\'http://'+req.headers.host+'/hotel/users/'+user+'/resetpassword/'+ req.resetToken+'\'><h2>Change Password</h2></a>' // You can choose to send an HTML body instead
+        '<a href=\'http://'+req.headers.host+'/hotel/users/'+user+'/resetpassword/'+ req.resetToken+'\'>' +
+        '   <h2>Change Password</h2></a>'
     };
 
     transporter.sendMail(mailOptions, function(error, info){
         if(error){
             console.log(error);
-            res.json({result: true});
-        }else{
+            res.json({
+                result: false,
+                message: "Error Sending Email"
+            });
+        }else {
             console.log('Message sent: ' + info.response);
             res.json({result: true});
         };
@@ -254,7 +302,7 @@ router.post('/hotel/users/:username/email', function getResetToken(req, res,next
 
 });
 
-// validate resetpassword token and send to password update page
+/* Validate password reset token and render password update page. */
 router.get('/hotel/users/:username/resetpassword/:resetToken', function (req, res, next) {
     username = req.params.username;
     usertoken = req.params.resetToken;
@@ -264,7 +312,7 @@ router.get('/hotel/users/:username/resetpassword/:resetToken', function (req, re
         next(err);
     }
     else {
-        //call mongodb
+        //validate token with DB
         MongoClient.connect(url, function (err, db) {
             db.collection('User').findOne({"username":username}).then(function (success) {
                 console.log(success);
@@ -285,7 +333,7 @@ router.get('/hotel/users/:username/resetpassword/:resetToken', function (req, re
                     //user authentication successful
                     db.close();
                     //res.redirect("http://"+ req.headers.host+"/UpdatePassword.ejs")
-                    res.render('UpdatePassword', { user: username }, function(err, html) {
+                    res.render('UpdatePassword', { user: username, host:req.headers.host}, function(err, html) {
                         res.send(html);
                     });
                 }
@@ -329,7 +377,7 @@ router.put('/hotel/users/:username', function(req, res,next) {
     }
 });
 
-//Get Hotel User by username from MongoDB
+/* Get Hotel User by username from MongoDB. */
 router.get('/hotel/users/:username', function (req, res, next) {
     username = req.params.username;
     if (username == undefined) {
