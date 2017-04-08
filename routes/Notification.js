@@ -10,7 +10,8 @@ var ObjectId = require('mongodb').ObjectID;
 var url = process.env.MONGO_URL;
 var fcm_admin = require("firebase-admin");
 var FCM = require('fcm-push');
-var serverKey = 'AAAA5HSMyZ0:APA91bG7QQTpkBdbrlcmg2jyboI9muSY1xT4ExdlyC4I32-Vl3GQc0MKag2Z2dcyLgOyeyoESInqY2XVWuF6YxZAtfGphfIZhdZUz2yR22atMwkpcIUl2qgmngLDEVpGcNs60DXMcB32';
+var serverKey = process.env.FCM_SERVER_KEY;
+
 var fcm = new FCM(serverKey);
 
 router.post("/hotel/:username/happy_hour",
