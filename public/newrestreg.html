@@ -130,7 +130,7 @@
     <div class="additemform">
         <form id="multipage">
             <fieldset id="page_one">
-                <legend>Restaurant Details</legend>
+                <legend class="dropdown">Restaurant Details</legend>
                 <!-- Restaurant registration Code -->
 
                 <table id = "itemtable" >
@@ -175,12 +175,13 @@
 
             </fieldset>
             <fieldset id="page_two">
-                <legend>Menu Details</legend>
+                <legend class="dropdown">Menu Details</legend>
                 <div>
                     <table class="menu-list">
                         <tr>
                             <td>Menu Item</td><td>Description</td>
                         </tr>
+
                         <tr>
                             <td>
                                 <input type="text" id="mi1" />
@@ -190,14 +191,18 @@
                             </td>
                         </tr>
                     </table>
+                    <div class="additembutton">
                     <a href="#" title="" class="add-item">Add Another Item</a>
+                    </div>
+                    <br/>
+                    <div class="additembutton">
 
+                <button type="submit" formaction="dashboard.html" id="reg">Register Restaurant</button></div>
                 </div>
-                <button type="submit" formaction="dashboard.html" class="additembutton" id="reg">Register Restaurant</button>
             </fieldset>
 
         </form>
-    </div>
+    </div></div>
 
 </div>
 

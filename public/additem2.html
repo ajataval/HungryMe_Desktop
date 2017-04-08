@@ -73,12 +73,11 @@
                 for(var x = orlen+1; x <= counter; x++){
 					jobj['menu'].push({"name" : $('#mi'+x).val(), "description" : $('#d'+x).val()});
 				}
-				alert(JSON.stringify(jobj));
                 var t=JSON.stringify(jobj);
 
 				$.ajax({
-                    type: "POST",
-                    url: "/hotel/users",
+                    type: "PUT",
+                    url: "/hotel/users/"+user+"/menu",
                     data: t,
                     contentType: "application/json"
                 }).done(function (obj) {
@@ -87,7 +86,7 @@
                     else
                         alert("Failure");
                 }).fail(function (obj) {
-                    //alert("Failed");
+                    alert("Failed");
                 });
             });
         });
@@ -158,6 +157,8 @@
 							</td>
 						</tr>
 						-->
+					</table>
+					<table>
 						<tr><td><a href="#" title="" class="add-item" id="aai">Add Another Item</a></td>
 						</tr>
 						<tr><td><a href="#" title="" class="updatemenu" id="mub">Update Menu</a></td>
