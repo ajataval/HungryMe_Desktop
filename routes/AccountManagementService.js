@@ -214,7 +214,7 @@ router.post('/hotel/users', getHotelPlaceID, function(req, res,next) {
     }
     else{
         hotelUser.resetToken = "";
-        if( hoteluser.menu !== undefined) {
+        if( hotelUser.menu !== undefined) {
             for (i = 0; i < hotelUser.menu.length; i++) {
                 hotelUser.menu[i].count = 0;
                 hotelUser.menu[i].review = 0;
