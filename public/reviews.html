@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reviews and Comments</title>
+    <link rel="stylesheet" href="../stylesheets/visuals2.css">
+    <script type="text/javascript" src="../UI/jscode.js"></script>
+    <script>
+        var user;
+        function getCookie(cname) {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for(var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+        function checkCookie() {
+            user=getCookie("username");
+            if (user != "") {
+                //alert("Welcome again " + user);
+                $.ajax({
+                    type: "GET",
+                    url: "/hotel/users/"+user+"/menu", //confirm URL
+                    contentType: "application/json"
+                }).done(function (obj) {
+                    jobj=obj;
+                    //find length of menu array inside object 'l'
+                    orlen = obj.menu.length;
+                    var link=document.getElementById("aai");
+                    for(var temp = 1; temp <= orlen; temp++){
+                        link.click();
+                        $('#mi'+temp).val(obj.menu[temp-1].name);
+                        $('#d'+temp).val(obj.menu[temp-1].description);
+
+                    }
+                }).fail(function (obj) {
+                    alert("Failed");
+                });
+            } else {
+                user = prompt("Please enter your name:","");
+                if (user != "" && user != null) {
+                    setCookie("username", user, 30);
+                }
+            }
+        }
+    </script>
+
+</head>
+<style>
+    .inv {
+        display: none;
+    }
+</style>
+<body onload="checkCookie()">
+<div class="banner">
+    <img class ="picstyle" src="../images/banner4.png" >
+</div>
+</br>
+<p class = "genwebsitetext">Restaurant Reviews and Comments</p>
+</br>
+<div class="dashboard">
+    <!-- Displaying reviews and comments Code -->
+
+
+
+    <!-- Displaying reviews and comments Code Ends -->
+</div>
+</body>
+</html>

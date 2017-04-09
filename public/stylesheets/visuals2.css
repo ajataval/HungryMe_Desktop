@@ -266,3 +266,21 @@ body {
   font-family: "Roboto", sans-serif;
   font-size: 24px;
 }
+.dashstyle{
+  width: 100%;
+  align-items: center;
+  font-family: "Roboto", sans-serif;
+  text-align: center;
+  font-size: 24px;
+}
+.dashstyle td{
+  padding: 1.5%;
+  margin : auto;
+}
+.dashboard2 {
+  background: #FFFFFF;
+  margin: auto;
+  width: 80%;
+
+  padding: 10px;
+}
