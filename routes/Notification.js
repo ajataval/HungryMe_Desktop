@@ -102,6 +102,9 @@ var addFavoriteHotel = function (req,res,next){
 
 var removeFavoriteHotel = function (req,res,next){
 
+    console.log("@@@@@@@@@######## "+ req.body.hotel)
+    console.log("@@@@@@@@@######## "+ req.body.registrationToken)
+
     if (req.body.hotel == undefined || req.body.hotel == ""
         || req.body.registrationToken == undefined || req.body.registrationToken == "") {
         err = new Error("Hotel/ Registration Token cannot be empty");
