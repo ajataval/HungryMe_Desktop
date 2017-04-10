@@ -102,18 +102,15 @@ var addFavoriteHotel = function (req,res,next){
 
 var removeFavoriteHotel = function (req,res,next){
 
-    console.log("@@@@@@@@@######## "+ req.body.hotel)
-    console.log("@@@@@@@@@######## "+ req.body.registrationToken)
-
-    if (req.body.hotel == undefined || req.body.hotel == ""
-        || req.body.registrationToken == undefined || req.body.registrationToken == "") {
+    if (req.query.hotel == undefined || req.query.hotel == ""
+        || req.query.registrationToken == undefined || req.query.registrationToken == "") {
         err = new Error("Hotel/ Registration Token cannot be empty");
         err.status = 400;
         next(err);
     }
 
     var appUser = req.params.username;
-    var hotel = req.body.hotel;
+    var hotel = req.query.hotel;
 
     MongoClient.connect(url, function (err, db) {
         db.collection('User').update(
@@ -176,10 +173,10 @@ router.put("/app/users/:username/favorite", addFavoriteHotel , getUpdatedUser, f
 router.delete("/app/users/:username/favorite", removeFavoriteHotel , getUpdatedUser, function unsubscribeToFCM(req,res,next){
 
     // This registration token comes from the client FCM SDKs.
-    var registrationToken = req.body.registrationToken;
+    var registrationToken = req.query.registrationToken;
 
     // The topic name can be optionally prefixed with "/topics/".
-    var topic = "/topics/"+req.body.hotel.split("@")[0];
+    var topic = "/topics/"+req.query.hotel.split("@")[0];
 
     // Subscribe the device corresponding to the registration token to the
     // topic.
