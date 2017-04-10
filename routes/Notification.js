@@ -14,7 +14,7 @@ var serverKey = process.env.FCM_SERVER_KEY;
 var fcm = new FCM(serverKey);
 
 var admin = require("firebase-admin");
-var serviceAccount = require(__dirname+"/hungry-me-e36d3-firebase-adminsdk-90xb4-a59e713bf3.json");
+var serviceAccount = require(__dirname+"/hungry-me-e36d3-firebase-adminsdk-90xb4-e224473559.json");
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: "https://hungry-me-e36d3.firebaseio.com"
