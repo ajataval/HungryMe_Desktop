@@ -149,13 +149,11 @@ var getUpdatedUser = function (req,res,next){
 
 router.put("/app/users/:username/favorite", addFavoriteHotel , getUpdatedUser, function subscribeToFCM(req,res,next){
 
-
-
     // This registration token comes from the client FCM SDKs.
     var registrationToken = req.body.registrationToken;
 
     // The topic name can be optionally prefixed with "/topics/".
-    var topic = "/topics/"+req.body.hotel;
+    var topic = "/topics/"+req.body.hotel.split("@")[0];
 
     // Subscribe the device corresponding to the registration token to the
     // topic.
@@ -178,7 +176,7 @@ router.delete("/app/users/:username/favorite", removeFavoriteHotel , getUpdatedU
     var registrationToken = req.body.registrationToken;
 
     // The topic name can be optionally prefixed with "/topics/".
-    var topic = "/topics/"+req.body.hotel;
+    var topic = "/topics/"+req.body.hotel.split("@")[0];
 
     // Subscribe the device corresponding to the registration token to the
     // topic.
