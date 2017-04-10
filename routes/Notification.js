@@ -15,6 +15,10 @@ var fcm = new FCM(serverKey);
 
 var admin = require("firebase-admin");
 var serviceAccount = require(__dirname+"/hungry-me-e36d3-firebase-adminsdk-90xb4-a59e713bf3.json");
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://hungry-me-e36d3.firebaseio.com"
+});
 
 var inserthappyhour = function (req,res,next){
     req.body.username = req.params.username;
@@ -145,10 +149,7 @@ var getUpdatedUser = function (req,res,next){
 
 router.put("/app/users/:username/favorite", addFavoriteHotel , getUpdatedUser, function subscribeToFCM(req,res,next){
 
-    admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
-        databaseURL: "https://hungry-me-e36d3.firebaseio.com"
-    });
+
 
     // This registration token comes from the client FCM SDKs.
     var registrationToken = req.body.registrationToken;
@@ -172,11 +173,6 @@ router.put("/app/users/:username/favorite", addFavoriteHotel , getUpdatedUser, f
 });
 
 router.delete("/app/users/:username/favorite", removeFavoriteHotel , getUpdatedUser, function unsubscribeToFCM(req,res,next){
-
-    admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
-        databaseURL: "https://hungry-me-e36d3.firebaseio.com"
-    });
 
     // This registration token comes from the client FCM SDKs.
     var registrationToken = req.body.registrationToken;
