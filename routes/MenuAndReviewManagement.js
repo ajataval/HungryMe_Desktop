@@ -32,10 +32,39 @@ router.post('/hotel/users/:username/uploadMenu', upload.single('foo'),
         })
         // on event "end" i.e all rows from csv have been read and csv reader will now exit block.
         .on('done',function(error){
-            console.log("File read!!!!!!!!!!!!")
+            console.log("File read complete")
             next();
         })
         //next();
+    },function filterExistingMenu(req, res,next) {
+        // call mongo to get menu for this user
+        var username = req.params.username;
+
+        MongoClient.connect(url, function (err, db) {
+            db.collection('User').findOne({"username":username},{ menu: 1, _id:0}).then(function (success) {
+                if(success == undefined)
+                    next();
+                else if(success.menu !== undefined){
+                    // update existing menu items in new menu to retain reviews
+                    for( i =0; i < success.menu.length; i++){
+                        for( j=0; j< req.newMenu.length;j++){
+                            if(req.newMenu[j].name == success.menu[i].name){
+                                req.newMenu[j].count = success.menu[i].count;
+                                req.newMenu[j].review = success.menu[i].review;
+                                req.newMenu[j].comments = success.menu[i].comments;
+                            }
+                        }
+                    }
+                    //console.log(req.newMenu)
+                    next();
+                }
+            }, function (err) {
+                err = new Error("Server Error while searching for "+ username);
+                err.status=500;
+                db.close();
+                next(err);
+            });
+        });
     },
     function updateInDB(req, res,next) {
             // last function in the call change to upload menu
@@ -56,7 +85,7 @@ router.post('/hotel/users/:username/uploadMenu', upload.single('foo'),
                     }
                 }
 
-                console.log("New menu is :: " + newMenu);
+                //console.log("New menu is :: " + newMenu);
                 MongoClient.connect(url, function (err, db) {
                     db.collection('User').updateOne({ username: user },
                         {
