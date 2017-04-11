@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+     Latest compiled and minified CSS
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="stylesheets/visuals.css"/>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    &lt;!&ndash; Latest compiled and minified JavaScript &ndash;&gt;
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/bower_components/moment/min/moment.min.js"></script>
+    <script type="text/javascript" src="/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+    <link rel="stylesheet" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />-->
+
+    <script type="text/javascript" src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="/bower_components/moment/min/moment.min.js"></script>
+    <script type="text/javascript" src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+
+    <title>Happy Hour</title>
+
+    <script>
+        $(function () {
+            $('#startdate').datetimepicker();
+            $('#enddate').datetimepicker({
+                useCurrent: false //Important! See issue #1075
+            });
+            $("#startdate").on("dp.show", function (e) {
+                $('#startdate').data("DateTimePicker").minDate(e.date);
+            });
+            $("#startdate").on("dp.change", function (e) {
+                $('#enddate').data("DateTimePicker").minDate(e.date);
+            });
+
+            $("#addOffer").click(function () {
+                var message = $('#message').val();
+                var startdate = $('#startdate').data('date');
+                var enddate = $('#enddate').data('date');
+                var username = "Edge";
+                $.ajax({
+                    type: "POST",
+                    url: "http://"+window.location.host+"/offers/"+username+"/happy_hour",
+                    data: JSON.stringify({
+                        "hotelname": "Jamba Juice",
+                        "message": message,
+                        "start_time": startdate,
+                        "end_time": enddate
+                    }),
+                    contentType: "application/json"
+                }).done(function (obj) {
+                    if (obj.result == true) {
+                        alert("Happy Hour update successful");
+                        window.location = "http://"+window.location.host+"/dashboard.html";
+                    }
+                }).fail(function (obj) {
+                    alert("Failed");
+                    window.location = "index.html";
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="banner">
+    <h1 style="color : white" align="center">Add Happy hour</h1>
+</div>
+<div class="container login-form">
+    <div class='col-md-12'>
+        <h3>Hotel Name</h3>
+    </div>
+    <div class='col-md-12'>
+    <div class="form-group">
+        <input type="text" class="form-control" id="message" placeholder="Happy Hour Offer" >
+    </div>
+    </div>
+    <div class='col-md-12'>
+        <div class="form-group">
+            <div class='input-group date' id='startdate'>
+                <input type='text' class="form-control" placeholder="StartDate"/>
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class='col-md-12'>
+        <div class="form-group">
+            <div class='input-group date' id='enddate'>
+                <input type='text' class="form-control" placeholder="EndDate"/>
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-md-8">
+            <button type="submit" class="btn btn-success" id="addOffer">Submit</button>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

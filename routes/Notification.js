@@ -39,7 +39,7 @@ var inserthappyhour = function (req,res,next){
 }
 
 
-router.post("/hotels/:username/happy_hour", inserthappyhour , function sendNotification(req,res,next){
+router.post("/offers/:username/happy_hour", inserthappyhour , function sendNotification(req,res,next){
         var message = {
             to: '/topics/'+req.params.username, // required fill with device token or topics
             data:{

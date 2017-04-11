@@ -38,3 +38,7 @@ jspm_packages
 
 # Webstrom
 .idea
+
+# csv uploads of menu files
+uploads
+bower_components

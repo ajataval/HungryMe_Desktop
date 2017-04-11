@@ -14,9 +14,8 @@ var assert = require('assert');
 var ObjectId = require('mongodb').ObjectID;
 var url = process.env.MONGO_URL;
 
-//Update menu for given hotel to MongoDB using file
-router.post('/hotel/users/:username/uploadMenu', upload.single('foo'),
-    function parseCSVtoJSON(req, res,next) {
+
+var parseCSVtoJSON = function (req, res,next) {
     // next function in the process to update menu will be called after upload function from csv package uploads
     // file to temporary folder.
     console.log(req.file);
@@ -35,38 +34,42 @@ router.post('/hotel/users/:username/uploadMenu', upload.single('foo'),
             console.log("File read complete")
             next();
         })
-        //next();
-    },function filterExistingMenu(req, res,next) {
-        // call mongo to get menu for this user
-        var username = req.params.username;
+    //next();
+}
 
-        MongoClient.connect(url, function (err, db) {
-            db.collection('User').findOne({"username":username},{ menu: 1, _id:0}).then(function (success) {
-                if(success == undefined)
-                    next();
-                else if(success.menu !== undefined){
-                    // update existing menu items in new menu to retain reviews
-                    for( i =0; i < success.menu.length; i++){
-                        for( j=0; j< req.newMenu.length;j++){
-                            if(req.newMenu[j].name == success.menu[i].name){
-                                req.newMenu[j].count = success.menu[i].count;
-                                req.newMenu[j].review = success.menu[i].review;
-                                req.newMenu[j].comments = success.menu[i].comments;
-                            }
+var retainExistingMenu = function (req, res,next) {
+    // call mongo to get menu for this user
+    var username = req.params.username;
+
+    MongoClient.connect(url, function (err, db) {
+        db.collection('User').findOne({"username":username},{ menu: 1, _id:0}).then(function (success) {
+            if(success == undefined)
+                next();
+            else if(success.menu !== undefined){
+                // update existing menu items in new menu to retain reviews
+                for( i =0; i < success.menu.length; i++){
+                    for( j=0; j< req.newMenu.length;j++){
+                        if(req.newMenu[j].name == success.menu[i].name){
+                            req.newMenu[j].count = success.menu[i].count;
+                            req.newMenu[j].review = success.menu[i].review;
+                            req.newMenu[j].comments = success.menu[i].comments;
                         }
                     }
-                    //console.log(req.newMenu)
-                    next();
                 }
-            }, function (err) {
-                err = new Error("Server Error while searching for "+ username);
-                err.status=500;
-                db.close();
-                next(err);
-            });
+                //console.log(req.newMenu)
+                next();
+            }
+        }, function (err) {
+            err = new Error("Server Error while searching for "+ username);
+            err.status=500;
+            db.close();
+            next(err);
         });
-    },
-    function updateInDB(req, res,next) {
+    });
+}
+//Update menu for given hotel to MongoDB using file
+router.post('/hotel/users/:username/uploadMenu', upload.single('foo'), parseCSVtoJSON,
+    retainExistingMenu, function updateNewMenuInDB(req, res,next) {
             // last function in the call change to upload menu
             user = req.params.username
             newMenu = req.newMenu
