@@ -52,7 +52,7 @@
                 var username = "Edge";
                 $.ajax({
                     type: "POST",
-                    url: "http://"+window.location.host+"/offers/"+username+"/happy_hour",
+                    url: "/offers/"+username+"/happy_hour",
                     data: JSON.stringify({
                         "hotelname": "Jamba Juice",
                         "message": message,
@@ -63,11 +63,11 @@
                 }).done(function (obj) {
                     if (obj.result == true) {
                         alert("Happy Hour update successful");
-                        window.location = "http://"+window.location.host+"/dashboard.html";
+                        window.location = "dashboard.html";
                     }
                 }).fail(function (obj) {
                     alert("Failed");
-                    window.location = "index.html";
+                    window.location = "dashboard.html";
                 });
             });
         });
