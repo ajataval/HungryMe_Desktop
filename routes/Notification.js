@@ -17,7 +17,7 @@ var admin = require("firebase-admin");
 var serviceAccount = require(__dirname+"/hungry-me-e36d3-firebase-adminsdk-90xb4-e224473559.json");
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://hungry-me-e36d3.firebaseio.com"
+    databaseURL: "https://hungry-me-e36d3.firebaseio.com/"
 });
 
 var inserthappyhour = function (req,res,next){

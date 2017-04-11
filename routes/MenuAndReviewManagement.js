@@ -178,10 +178,10 @@ router.put('/hotel/users/:username/menu/:menuname', getMenuDetail,function updat
     var user_review = req.body.review;
     var comment = req.body.comment;
 
-    if( user_review !== undefined) {
+    if( user_review !== undefined && user_review !== 0) {
         res.curr_menu.count += 1;
-        newReview = res.curr_menu.review + (user_review - res.curr_menu.review) / res.curr_menu.count;
-        res.curr_menu.review = Math.round(newReview);
+        var newReview = res.curr_menu.review + (user_review - res.curr_menu.review) / res.curr_menu.count;
+        res.curr_menu.review = parseFloat(newReview.toFixed(2));
 
     }
     else
