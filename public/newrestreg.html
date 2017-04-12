@@ -90,9 +90,10 @@
                     data: input,
                     contentType: "application/json"
                 }).done(function (obj) {
-                    if(obj.result == true)
+                    if(obj.result == true) {
                         alert("Success");
-                    else
+                        window.location = "dashboard.html"
+                    }else
                         alert("Failure");
                 }).fail(function (obj) {
                     alert("Failed");
@@ -198,7 +199,7 @@
                     <br/>
                     <div class="additembutton">
 
-                <button type="submit" formaction="dashboard.html" id="reg">Register Restaurant</button></div>
+                <button type="submit" id="reg">Register Restaurant</button></div>
                 </div>
             </fieldset>
 
