@@ -5,9 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-     Latest compiled and minified CSS
+     <!--Latest compiled and minified CSS
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">-->
 
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
@@ -33,6 +33,7 @@
     <title>Happy Hour</title>
 
     <script>
+
         $(function () {
             $('#startdate').datetimepicker();
             $('#enddate').datetimepicker({
@@ -45,30 +46,62 @@
                 $('#enddate').data("DateTimePicker").minDate(e.date);
             });
 
+
+            function getCookie(cname) {
+                var name = cname + "=";
+                var decodedCookie = decodeURIComponent(document.cookie);
+                var ca = decodedCookie.split(';');
+                for(var i = 0; i < ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) == ' ') {
+                        c = c.substring(1);
+                    }
+                    if (c.indexOf(name) == 0) {
+                        return c.substring(name.length, c.length);
+                    }
+                }
+                return "";
+            }
+
             $("#addOffer").click(function () {
+                $('.alert-danger').hide();
                 var message = $('#message').val();
                 var startdate = $('#startdate').data('date');
                 var enddate = $('#enddate').data('date');
-                var username = "Edge";
-                $.ajax({
-                    type: "POST",
-                    url: "/offers/"+username+"/happy_hour",
-                    data: JSON.stringify({
-                        "hotelname": "Jamba Juice",
-                        "message": message,
-                        "start_time": startdate,
-                        "end_time": enddate
-                    }),
-                    contentType: "application/json"
-                }).done(function (obj) {
-                    if (obj.result == true) {
-                        alert("Happy Hour update successful");
+                var username = getCookie("username");
+                var hotelname = getCookie("hotelname")
+
+                if (message === "") {
+                    $('#invMessage').show();
+                }
+                else if ( startdate == "" || startdate == undefined){
+                    $('#invStart').show()
+                }
+                else if ( enddate == "" || enddate == undefined ){
+                    $('#invEnd').show()
+                }
+                else {
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/offers/" + username + "/happy_hour",
+                        data: JSON.stringify({
+                            "hotelname": hotelname,
+                            "message": message,
+                            "start_time": startdate,
+                            "end_time": enddate
+                        }),
+                        contentType: "application/json"
+                    }).done(function (obj) {
+                        if (obj.result == true) {
+                            alert("Happy Hour update successful");
+                            window.location = "dashboard.html";
+                        }
+                    }).fail(function (obj) {
+                        alert("Failed");
                         window.location = "dashboard.html";
-                    }
-                }).fail(function (obj) {
-                    alert("Failed");
-                    window.location = "dashboard.html";
-                });
+                    });
+                }
             });
         });
     </script>
@@ -77,10 +110,13 @@
 <div class="banner">
     <h1 style="color : white" align="center">Add Happy hour</h1>
 </div>
-<form role="form" data-toggle="validator">
+
 <div class="container login-form">
+    <div class="alert alert-danger alert-dismissable" id="invMessage" hidden="true"> <strong>Failed.</strong> Please add Message</div>
+    <div class="alert alert-danger alert-dismissable" id="invStart" hidden="true"> <strong>Failed.</strong> Start Date is Empty</div>
+    <div class="alert alert-danger alert-dismissable" id="invEnd" hidden="true"> <strong>Failed.</strong> End Date is Empty</div>
     <div class='col-md-12'>
-        <h3>Hotel Name</h3>
+        <h3 id ="hname"></h3>
     </div>
     <div class='col-md-12'>
     <div class="form-group">
@@ -113,7 +149,6 @@
         </div>
     </div>
 </div>
-</form>
 
 </body>
 </html>
