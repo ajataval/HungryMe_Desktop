@@ -45,7 +45,7 @@
                 $('#enddate').data("DateTimePicker").minDate(e.date);
             });
 
-            $("#addOffer").click(function () {
+            $("#addOffer").submit(function () {
                 var message = $('#message').val();
                 var startdate = $('#startdate').data('date');
                 var enddate = $('#enddate').data('date');
@@ -77,6 +77,7 @@
 <div class="banner">
     <h1 style="color : white" align="center">Add Happy hour</h1>
 </div>
+<form role="form" data-toggle="validator">
 <div class="container login-form">
     <div class='col-md-12'>
         <h3>Hotel Name</h3>
@@ -99,7 +100,7 @@
     <div class='col-md-12'>
         <div class="form-group">
             <div class='input-group date' id='enddate'>
-                <input type='text' class="form-control" placeholder="EndDate" required="true"/>
+                <input type='text' class="form-control" onclick=clear(); placeholder="EndDate" required="true"/>
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-calendar"></span>
                 </span>
@@ -112,7 +113,7 @@
         </div>
     </div>
 </div>
-
+</form>
 
 </body>
 </html>
