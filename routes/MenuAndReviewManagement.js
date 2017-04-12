@@ -68,7 +68,7 @@ var retainExistingMenu = function (req, res,next) {
     });
 }
 //Update menu for given hotel to MongoDB using file
-router.post('/hotel/users/:username/uploadMenu', upload.single('foo'), parseCSVtoJSON,
+router.post('/hotel/users/:username/uploadMenu', upload.single('menufile'), parseCSVtoJSON,
     retainExistingMenu, function updateNewMenuInDB(req, res,next) {
             // last function in the call change to upload menu
             user = req.params.username
