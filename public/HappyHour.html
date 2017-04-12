@@ -45,7 +45,7 @@
                 $('#enddate').data("DateTimePicker").minDate(e.date);
             });
 
-            $("#addOffer").submit(function () {
+            $("#addOffer").click(function () {
                 var message = $('#message').val();
                 var startdate = $('#startdate').data('date');
                 var enddate = $('#enddate').data('date');
@@ -100,7 +100,7 @@
     <div class='col-md-12'>
         <div class="form-group">
             <div class='input-group date' id='enddate'>
-                <input type='text' class="form-control" onclick=clear(); placeholder="EndDate" required="true"/>
+                <input type='text' class="form-control" placeholder="EndDate" required="true"/>
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-calendar"></span>
                 </span>

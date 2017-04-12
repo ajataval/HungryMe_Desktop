@@ -26,6 +26,13 @@ var parseCSVtoJSON = function (req, res,next) {
         .fromFile(csvFilePath)
         // on event"json" i.e a row is read from csv and converted to JSON Recipe object
         .on('json',function (jsonObj){
+            if(jsonObj.name == undefined || jsonObj.name == ''
+                || jsonObj.description == undefined || jsonObj.description == '') {
+                err = new Error("Name or Description missing in given file")
+                err.status=400;
+                next(err);
+
+            }
             req.newMenu.push(jsonObj)
             console.log(jsonObj)
         })
