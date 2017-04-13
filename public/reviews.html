@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Reviews and Comments</title>
-    <link rel="stylesheet" href="../stylesheets/visuals2.css">
-    <script type="text/javascript" src="../UI/jscode.js"></script>
+    <title>Hotel Menu Update Page</title>
+    <link rel="stylesheet" href="stylesheets/visuals2.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
     <script>
+        var orlen;
+        var jobj;
         var user;
+        var counter = 0;
         function getCookie(cname) {
             var name = cname + "=";
             var decodedCookie = decodeURIComponent(document.cookie);
@@ -27,7 +31,7 @@
                 //alert("Welcome again " + user);
                 $.ajax({
                     type: "GET",
-                    url: "/hotel/users/"+user+"/menu", //confirm URL
+                    url: "/hotel/users/"+user+"/menu",
                     contentType: "application/json"
                 }).done(function (obj) {
                     jobj=obj;
@@ -37,8 +41,7 @@
                     for(var temp = 1; temp <= orlen; temp++){
                         link.click();
                         $('#mi'+temp).val(obj.menu[temp-1].name);
-                        $('#d'+temp).val(obj.menu[temp-1].description);
-                        
+                        $('#d'+temp).val(obj.menu[temp-1].comments);
 
                     }
                 }).fail(function (obj) {
@@ -51,27 +54,92 @@
                 }
             }
         }
-    </script>
 
+        jQuery(function(){
+            jQuery('a.add-item').click(function(event){
+                event.preventDefault();
+                counter++;
+                var newRow = jQuery('<tr><td><input type="text" id="mi' +
+                    counter + '"/></td><td><input type="text" id="d' +
+                    counter + '"/></td></tr>');
+
+                jQuery('table.menu-list').append(newRow);
+            });
+        });
+
+        jQuery(function(){
+            jQuery('a.updatemenu').click(function(event){
+                event.preventDefault();
+                for(var x = orlen+1; x <= counter; x++){
+                    jobj['menu'].push({"name" : $('#mi'+x).val(), "description" : $('#d'+x).val()});
+                }
+                var t=JSON.stringify(jobj);
+
+                $.ajax({
+                    type: "PUT",
+                    url: "/hotel/users/"+user+"/menu",
+                    data: t,
+                    contentType: "application/json"
+                }).done(function (obj) {
+                    if(obj.result == true)
+                        alert("Success");
+                    else
+                        alert("Failure");
+                }).fail(function (obj) {
+                    alert("Failed");
+                });
+            });
+        });
+
+        $(function(){
+            $('#uploadBTN').on('click', function(){
+                var fd = new FormData($("#menuexcel"));
+                $.ajax({
+                    url: "/hotel/users/"+user+"/uploadMenu",
+                    type: 'POST',
+                    data: fd,
+                    success:function(data){
+                        alert("success");
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            });
+        });
+
+    </script>
 </head>
-<style>
-    .inv {
-        display: none;
-    }
-</style>
+
 <body onload="checkCookie()">
 <div class="banner">
-    <img class ="picstyle" src="../images/banner4.png" >
+    <img class ="picstyle" src="images/banner4.png"`` >
 </div>
-</br>
-<p class = "genwebsitetext">Restaurant Reviews and Comments</p>
-</br>
-<div class="dashboard">
-    <!-- Displaying reviews and comments Code -->
+<br/>
+<p class = "genwebsitetext">Update Restaurant menu</p>
+<br/>
+<div class="additemform">
 
+            <div id="content_2">
+                <form class="additemform">
+                    <table id = "itemtable" class="menu-list">
 
+                        <tr>
+                            <td>Menu Item</td><td>Description</td>
+                        </tr>
+                    </table>
+                    <div style="visibility: hidden">
+                    <table>
+                        <tr><td><a href="#" title="" class="add-item" id="aai">Add Another Item</a></td>
+                        </tr>
+                        <tr><td><a href="#" title="" class="updatemenu" id="mub">Update Menu</a></td>
+                        </tr>
+                    </table>
+                    </div>
 
-    <!-- Displaying reviews and comments Code Ends -->
-</div>
+                </form>
+
+            </div>
+
 </body>
 </html>

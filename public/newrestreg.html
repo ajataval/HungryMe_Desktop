@@ -12,9 +12,7 @@
             $('#multipage').multipage({transitionFunction:transition,stateFunction: textpages});
             $('form').submit(function(){ alert("Submitted!"); return false;});
         });
-
         function generateTabs(tabs) {
-
             html = '';
             for (var i in tabs) {
                 tab = tabs[i];
@@ -31,15 +29,12 @@
                 }
             });
         }
-
         function transition(from,to) {
             $(from).fadeOut('fast',function(){$(to).fadeIn('fast');});
-
         }
         function textpages(obj,page,pages) {
             $(obj).html(page + ' of ' + pages);
         }
-
     </script>
     <!-- Ajax Calls below-->
     <script>
@@ -90,7 +85,7 @@
                     contentType: "application/json"
                 }).done(function (obj) {
                     if(obj.result == true)
-                        alert("Success");
+                        window.location ("dashboard.html");
                     else
                         alert("Failure");
                 }).fail(function (obj) {
@@ -98,7 +93,6 @@
                 });
             });
         });
-
     </script>
     <!-- End of Ajax calls code-->
     <script>
@@ -106,13 +100,11 @@
             var counter = 2;
             jQuery('a.add-item').click(function(event){
                 event.preventDefault();
-
                 var newRow = jQuery('<tr><td><input type="text" id="mi' +
                     counter + '"/></td><td><input type="text" id="d' +
                     counter + '"/></td></tr>');
                 counter++;
                 jQuery('table.menu-list').append(newRow);
-
             });
         });
     </script>
@@ -128,7 +120,7 @@
 </br>
 <div class="regform">
     <div class="additemform">
-        <form id="multipage">
+        <div id="multipage">
             <fieldset id="page_one">
                 <legend class="dropdown">Restaurant Details</legend>
                 <!-- Restaurant registration Code -->
@@ -192,16 +184,16 @@
                         </tr>
                     </table>
                     <div class="additembutton">
-                    <a href="#" title="" class="add-item">Add Another Item</a>
+                        <a href="#" title="" class="add-item">Add Another Item</a>
                     </div>
                     <br/>
                     <div class="additembutton">
 
-                <button type="submit" formaction="dashboard.html" id="reg">Register Restaurant</button></div>
+                        <button type="submit" id="reg">Register Restaurant</button></div>
                 </div>
             </fieldset>
 
-        </form>
+        </div>
     </div></div>
 
 </div>

@@ -90,6 +90,24 @@
                 });
             });
         });
+
+        $(function(){
+            $('#uploadBTN').on('click', function(){
+                var fd = new FormData($("#menuexcel"));
+                $.ajax({
+                    url: "/hotel/users/"+user+"/uploadMenu",
+                    type: 'POST',
+                    data: fd,
+                    success:function(data){
+                        alert("success");
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+            });
+        });
+
 	</script>
 </head>
 <style>
@@ -111,18 +129,19 @@
 		<option value="">Select...</option>
 		<option value="content_1">Upload Excel Sheet</option>
 		<option value="content_2">Add Menu Item</option>
-		<option value="content_3">Delete Menu Item</option>
 		<select>
 
 			<br/><br/><br/>
 			<!-- Content 1 Start -->
+
+
 			<div id="content_1" class="inv">
-				<form class="additemform">
+				<form class="additemform" id="fileinfo" name="fileinfo">
 					<div class = "uef">
 						<p> Upload Excel File </p>
 						<form class="additemform">
-							<input type = "file" name ="menuexcel">
-							<button class="additembutton">Upload Excel</button>
+							<input type = "file" name ="menuexcel" id="menuexcel">
+							<button class="additembutton" id="uploadBTN">Upload Excel</button>
 						</form>
 						<br/>
 					</div>
@@ -139,24 +158,6 @@
 						<tr>
 							<td>Menu Item</td><td>Description</td>
 						</tr>
-						<!--
-						<tr>
-							<td>
-								<input type="text" id="mi1" />
-							</td>
-							<td>
-								<input type="text" id="d1" />
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="text" id="mi2" />
-							</td>
-							<td>
-								<input type="text" id="d2" />
-							</td>
-						</tr>
-						-->
 					</table>
 					<table>
 						<tr><td><a href="#" title="" class="add-item" id="aai">Add Another Item</a></td>
@@ -170,7 +171,7 @@
 			</div>
 			<!-- Content 2 End-->
 
-			<!-- Content 3 Start -->
+			<!-- Content 3 Start
 			<div id="content_3" class="inv">
 				<form class="additemform">
 					<table id = "itemtable" >
@@ -189,15 +190,7 @@
 				</form>
 
 			</div>
-			<!-- Content 3 End-->
-			<!-- Content 4 Start -->
-			<div id="content_4" class="inv">
-				<form class="additemform">
-
-				</form>
-
-			</div>
-			<!-- Content 4 End-->
+			 Content 3 End-->
 			<script>
                 document
                     .getElementById('target')
