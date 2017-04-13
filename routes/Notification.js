@@ -38,19 +38,43 @@ var inserthappyhour = function (req,res,next){
     });
 }
 
+var getHotelUser = function (req,res,next){
+    username = req.params.username;
 
-router.post("/offers/:username/happy_hour", inserthappyhour , function sendNotification(req,res,next){
-        var message = {
+    MongoClient.connect(url, function (err, db) {
+        db.collection('User').findOne({"username":username}).then(function (success) {
+            if(success == undefined)
+                success = {};
+            db.close();
+            req.hotelUser =  success
+            next();
+        }, function (err) {
+            err = new Error("Server Error while searching for "+ username);
+            err.status=500;
+            db.close();
+            next(err);
+        });
+    });
+}
+
+router.post("/offers/:username/happy_hour", inserthappyhour , getHotelUser, function sendNotification(req,res,next){
+    if(req.hotelUser == {}){
+        err = new Error("Server Error while searching for "+ username);
+        err.status=500;
+        next(err);
+    }
+    var message = {
             to: '/topics/'+req.params.username, // required fill with device token or topics
             data:{
-                hotelname: req.body.hotelname,
+                hotelname: req.hotelUser.hotelname,
+                hoteladdress: req.hotelUser.address,
                 message: req.body.message,
                 start_time: req.body.start_time,
                 end_time: req.body.end_time,
                 username: req.params.username
             },
             notification: {
-                title: req.body.hotelname,
+                title: req.hotelUser.hotelname,
                 body: req.body.message
             }
         };

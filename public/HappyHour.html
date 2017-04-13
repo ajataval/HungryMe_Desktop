@@ -5,24 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-     <!--Latest compiled and minified CSS
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">-->
-
-    <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
           integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
     <link rel="stylesheet" href="stylesheets/visuals.css"/>
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    &lt;!&ndash; Latest compiled and minified JavaScript &ndash;&gt;
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-            crossorigin="anonymous"></script>
-    <script type="text/javascript" src="/bower_components/moment/min/moment.min.js"></script>
-    <script type="text/javascript" src="/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
-    <link rel="stylesheet" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />-->
-
     <script type="text/javascript" src="/bower_components/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript" src="/bower_components/moment/min/moment.min.js"></script>
     <script type="text/javascript" src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -31,10 +17,23 @@
     <link rel="stylesheet" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
 
     <title>Happy Hour</title>
+    <script>function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
 
-    <script>
-
-        $(function () {
+    $(function () {
             $('#startdate').datetimepicker();
             $('#enddate').datetimepicker({
                 useCurrent: false //Important! See issue #1075
@@ -46,30 +45,12 @@
                 $('#enddate').data("DateTimePicker").minDate(e.date);
             });
 
-
-            function getCookie(cname) {
-                var name = cname + "=";
-                var decodedCookie = decodeURIComponent(document.cookie);
-                var ca = decodedCookie.split(';');
-                for(var i = 0; i < ca.length; i++) {
-                    var c = ca[i];
-                    while (c.charAt(0) == ' ') {
-                        c = c.substring(1);
-                    }
-                    if (c.indexOf(name) == 0) {
-                        return c.substring(name.length, c.length);
-                    }
-                }
-                return "";
-            }
-
             $("#addOffer").click(function () {
                 $('.alert-danger').hide();
                 var message = $('#message').val();
                 var startdate = $('#startdate').data('date');
                 var enddate = $('#enddate').data('date');
                 var username = getCookie("username");
-                var hotelname = getCookie("hotelname")
 
                 if (message === "") {
                     $('#invMessage').show();
@@ -86,7 +67,6 @@
                         type: "POST",
                         url: "/offers/" + username + "/happy_hour",
                         data: JSON.stringify({
-                            "hotelname": hotelname,
                             "message": message,
                             "start_time": startdate,
                             "end_time": enddate
@@ -105,6 +85,15 @@
             });
         });
     </script>
+    <script>
+        var user=getCookie("username");
+        if (user != "") {
+            alert("Welcome again " + user);
+        } else {
+            window.location = "index.html";
+        }
+    </script>
+
 </head>
 <body>
 <div class="banner">
