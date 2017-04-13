@@ -56,7 +56,7 @@
         }
 
         jQuery(function(){
-            jQuery('a.add-item').click(function(event){
+            jQuery('button.add-item').click(function(event){
                 event.preventDefault();
                 counter++;
                 var newRow = jQuery('<tr><td><input type="text" id="mi' +
@@ -68,9 +68,10 @@
         });
 
         jQuery(function(){
-            jQuery('a.updatemenu').click(function(event){
+            jQuery('button.updatemenu').click(function(event){
                 event.preventDefault();
                 for(var x = orlen+1; x <= counter; x++){
+                    if($('#mi'+x).val() !="")
 					jobj['menu'].push({"name" : $('#mi'+x).val(), "description" : $('#d'+x).val()});
 				}
                 var t=JSON.stringify(jobj);
@@ -93,7 +94,7 @@
 
         $(function(){
             $('#uploadBTN').on('click', function(){
-                var fd = new FormData($("#menuexcel"));
+                var fd = new FormData($("#menufile"));
                 $.ajax({
                     url: "/hotel/users/"+user+"/uploadMenu",
                     type: 'POST',
@@ -140,7 +141,7 @@
 					<div class = "uef">
 						<p> Upload Excel File </p>
 						<form class="additemform">
-							<input type = "file" name ="menuexcel" id="menuexcel">
+							<input type = "file" name ="menufile" id="menufile">
 							<button class="additembutton" id="uploadBTN">Upload Excel</button>
 						</form>
 						<br/>
@@ -160,9 +161,9 @@
 						</tr>
 					</table>
 					<table>
-						<tr><td><a href="#" title="" class="add-item" id="aai">Add Another Item</a></td>
+						<tr><td><button title="" class="add-item" id="aai">Add Another Item</button></td>
 						</tr>
-						<tr><td><a href="#" title="" class="updatemenu" id="mub">Update Menu</a></td>
+						<tr><td><button title="" class="updatemenu" id="mub">Update Menu</button></td>
 						</tr>
 					</table>
 
