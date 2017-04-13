@@ -92,23 +92,6 @@
             });
         });
 
-        $(function(){
-            $('#uploadBTN').on('click', function(){
-                var fd = new FormData($("#menufile"));
-                $.ajax({
-                    url: "/hotel/users/"+user+"/uploadMenu",
-                    type: 'POST',
-                    data: fd,
-                    success:function(data){
-                        alert("success");
-                    },
-                    cache: false,
-                    contentType: false,
-                    processData: false
-                });
-            });
-        });
-
 	</script>
 </head>
 <style>
