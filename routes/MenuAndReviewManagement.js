@@ -128,6 +128,13 @@ router.put('/hotel/users/:username/menu', function(req, res,next) {
     }
     else {
         for( i =0 ; i< newMenu.length; i++) {
+            if(newMenu[i].name == undefined || newMenu[i].name == ''
+                || newMenu[i].description == undefined || newMenu[i].description == '') {
+                err = new Error("Name or Description missing in given input")
+                err.status=400;
+                next(err);
+
+            }
             if (newMenu[i].review == undefined) {
                 newMenu[i].count = 0;
                 newMenu[i].review = 0;
