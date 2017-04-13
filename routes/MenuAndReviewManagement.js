@@ -26,6 +26,13 @@ var parseCSVtoJSON = function (req, res,next) {
         .fromFile(csvFilePath)
         // on event"json" i.e a row is read from csv and converted to JSON Recipe object
         .on('json',function (jsonObj){
+            if(jsonObj.name == undefined || jsonObj.name == ''
+                || jsonObj.description == undefined || jsonObj.description == '') {
+                err = new Error("Name or Description missing in given file")
+                err.status=400;
+                next(err);
+
+            }
             req.newMenu.push(jsonObj)
             console.log(jsonObj)
         })
@@ -68,7 +75,7 @@ var retainExistingMenu = function (req, res,next) {
     });
 }
 //Update menu for given hotel to MongoDB using file
-router.post('/hotel/users/:username/uploadMenu', upload.single('foo'), parseCSVtoJSON,
+router.post('/hotel/users/:username/uploadMenu', upload.single('menufile'), parseCSVtoJSON,
     retainExistingMenu, function updateNewMenuInDB(req, res,next) {
             // last function in the call change to upload menu
             user = req.params.username
