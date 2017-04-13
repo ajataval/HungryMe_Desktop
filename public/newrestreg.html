@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="stylesheets/visuals2.css" />
 
     <script type="text/javascript">
+
+        var c=1;
         $(window).ready(function() {
             $('#multipage').multipage({transitionFunction:transition,stateFunction: textpages});
             $('form').submit(function(){ alert("Submitted!"); return false;});
@@ -35,10 +37,6 @@
         function textpages(obj,page,pages) {
             $(obj).html(page + ' of ' + pages);
         }
-    </script>
-    <!-- Ajax Calls below-->
-    <script>
-        var c=1;
         $(document).ready(function() {
             $('.message a').click(function () {
                 $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
@@ -58,19 +56,13 @@
                 var cuisine = $('#cuisine').val();
                 var pno = $('#pno').val();
                 var email = $('#eid').val();
-                var mi1 = $('#mi1').val();
-                var d1 = $('#d1').val();
-                var mi2 = $('#mi2').val();
-                var d2 = $('#d2').val();
-                var menuarray =[
-                    /*
-                    {"name": mi1,
-                        "description": d1,},
-                    {"name": mi2,
-                        "description" :d2}
-                        */
-                ];
 
+                var menuarray=[];
+                for(var x = 1; x < c; x++){
+                    if($('#mi'+x).val() != ""){
+                        menuarray.push({"name" : $('#mi'+x).val(), "description" : $('#d'+x).val()});
+                    }
+                }
                 var formdata = {
                     "hotelname": rest,
                     "username": own,
@@ -85,10 +77,7 @@
                      "email":eid,
                      */
                 };
-                for(var x = 1; x <= c; x++){
-                    if($('#mi'+x).val() !="")
-                        formdata['menu'].push({"name" : $('#mi'+x).val(), "description" : $('#d'+x).val()});
-                }
+
                 var input = JSON.stringify(formdata);
                 $.ajax({
                     type: "POST",
@@ -97,7 +86,7 @@
                     contentType: "application/json"
                 }).done(function (obj) {
                     if(obj.result == true)
-                        window.location ("dashboard.html");
+                        window.location = "dashboard.html";
                     else
                         alert("Failure");
                 }).fail(function (obj) {
