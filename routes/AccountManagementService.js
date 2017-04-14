@@ -404,4 +404,61 @@ router.get('/hotel/users/:username', function (req, res, next) {
     }
 });
 
+var validateHotelUser = function (req,res,next){
+    username = req.params.username;
+    hotelname = req.body.hotelname;
+    password = req.body.password;
+
+    MongoClient.connect(url, function (err, db) {
+        db.collection('User').findOne({
+            "username":username,
+            "hotelname":hotelname,
+            "password":password}
+        ).then(function (success) {
+            if(success == undefined)
+                res.json({"result":false, "message": "User validation failed"});
+            else
+                next();
+        }, function (err) {
+            err = new Error("Server Error while searching for "+ username);
+            err.status=500;
+            db.close();
+            next(err);
+        });
+    });
+}
+/* Delete Hotel User by username from MongoDB. */
+router.delete('/hotel/users/:username', validateHotelUser, function (req, res, next) {
+    username = req.params.username;
+    if (username == undefined) {
+        err = new Error("Username cannot be empty");
+        err.status = 400;
+        next(err);
+    }
+    else {
+        //call mongodb
+        MongoClient.connect(url, function (err, db) {
+            db.collection('User').deleteOne( { "username" : username} ).then(function (success) {
+                if(success.deletedCount == 1) {
+                    db.close();
+                    res.status(200);
+                    res.json({"result": true})
+                }
+                else
+                {
+                    err = new Error("Server Error while Deleting for "+ username);
+                    err.status=500;
+                    db.close();
+                    next(err);
+                }
+            }, function (err) {
+                err = new Error("Server Error with DB for "+ username);
+                err.status=500;
+                db.close();
+                next(err);
+            });
+        });
+    }
+});
+
 module.exports = router;

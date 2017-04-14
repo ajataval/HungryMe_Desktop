@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="stylesheets/visuals.css"/>
+    <script type="text/javascript" src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="/bower_components/js-cookie/src/js.cookie.js"></script>
+    <script type="text/javascript" src="/bower_components/moment/min/moment.min.js"></script>
+    <script type="text/javascript" src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+    <script type="text/javascript" src="/javascripts/validateLogin.js"></script>
+
+    <title>Account Settings</title>
+    <script>
+        validateUserLogin();
+        $(function () {
+        $('#changePassword').click(function () {
+            window.location = "ChangePassword.html"
+        });
+
+        $('#deleteHotel').click(function () {
+            $("#validateAction").modal();
+        });
+
+        $('#approveDelete').click(function (e) {
+            e.preventDefault();
+            $('.alert-danger').hide();
+            var hotelname = $('#hotelname').val();
+            var pass = $('#pwd').val();
+            var username = Cookies.get("username")
+            if (hotelname === "") {
+                $('#invhotel').show();
+            }
+            else if ( pass == ""){
+                $('#invpass').show()
+            }
+            else {
+                $("#validateAction").modal('hide');
+                $.ajax({
+                    type: "DELETE",
+                    url: "/hotel/users/"+username,
+                    data: JSON.stringify({
+                        "hotelname": hotelname,
+                        "password": pass,
+                    }),
+                    contentType: "application/json"
+                }).done(function (obj) {
+                    if (obj.result == true) {
+                        alert("User deleted successfully");
+                        Cookies.remove('username')
+                        window.location = "index.html";
+                    }
+                    else{
+                        $('#invAct').show()
+                    }
+                }).fail(function (obj) {
+                    alert("Failed");
+                    window.location = "dashboard.html";
+                });
+            }
+        });
+    });
+    </script>
+</head>
+<body>
+<div class="banner">
+    <h1 style="color : white" align="center">Account Settings</h1>
+    <button type="button" class="btn btn-primary glyphicon glyphicon-log-out" id="logout">Logout</button>
+</div>
+
+<div class="container login-form">
+    <div class="alert alert-danger alert-dismissable" id="invAct" hidden="true"> <strong>Authentication Failed for Delete User</strong></div>
+    <div class ='row'>
+        <div class='col-md-12'>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success" id="changePassword"> Change Password</button>
+            </div>
+        </div>
+        <div class='col-md-12'>
+            <div class="form-group">
+                <button type="submit" class="btn btn-danger" id="deleteHotel">Delete Hotel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="validateAction" role="dialog">
+    <div class="modal-dialog">
+
+        <div class="alert alert-danger alert-dismissable" id="invhotel" hidden="true"> <strong>HotelName is Empty</strong></div>
+        <div class="alert alert-danger alert-dismissable" id="invpass" hidden="true"> <strong>Password is Empty</strong></div>
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4><span class="glyphicon glyphicon-remove-sign"></span> Delete Hotel from HungryMe</h4>
+            </div>
+            <div class="modal-body" style="padding:40px 50px;">
+                <form role="form">
+                    <p>You are authorizing to delete hotel from HungryMe System</p>
+                    <p>Please provide the <b>hotel name</b> and <b>password</b> to DELETE HOTEL</p>
+                    <div class="form-group">
+                        <label for="hotelname"><span class="glyphicon"></span> Hotel Name</label>
+                        <input type="text" class="form-control" id="hotelname" placeholder="Enter Hotel Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
+                        <input type="password" class="form-control" id="pwd" placeholder="Enter password" required>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-block" id="approveDelete"><span class="glyphicon glyphicon-ok"></span> Approve</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
