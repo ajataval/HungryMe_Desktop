@@ -92,20 +92,9 @@
             });
         });
 
-        $(function(){
-            $('#uploadBTN').on('click', function(){
-                var fd = new FormData($("#menufile"));
-                $.ajax({
-                    url: "/hotel/users/"+user+"/uploadMenu",
-                    type: 'POST',
-                    data: fd,
-                    success:function(data){
-                        alert("success");
-                    },
-                    cache: false,
-                    contentType: false,
-                    processData: false
-                });
+        jQuery(function(){
+            jQuery('#uploadfile').click(function(event){
+                $("#uploadForm").attr("action", "/hotel/users/" + user + "/uploadMenu");
             });
         });
 
@@ -135,20 +124,15 @@
 
 			<br/><br/><br/>
 			<!-- Content 1 Start -->
-
-
 			<div id="content_1" class="inv">
-				<form class="additemform" id="fileinfo" name="fileinfo">
-					<div class = "uef">
-						<p> Upload Excel File </p>
-						<form class="additemform">
-							<input type = "file" name ="menufile" id="menufile">
-							<button class="additembutton" id="uploadBTN">Upload Excel</button>
-						</form>
-						<br/>
-					</div>
-				</form>
-
+			<form ref='uploadForm'
+				  id='uploadForm'
+				  action='/hotel/users/hussain0306/uploadMenu'
+				  method='POST'
+				  encType="multipart/form-data">
+				<input type="file" name="menufile" />
+				<input type='submit' value='Upload!' id="uploadfile"/>
+			</form>
 			</div>
 			<!-- Content 1 End-->
 

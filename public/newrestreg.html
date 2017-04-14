@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="stylesheets/visuals2.css" />
 
     <script type="text/javascript">
+
+        var c=1;
         $(window).ready(function() {
             $('#multipage').multipage({transitionFunction:transition,stateFunction: textpages});
             $('form').submit(function(){ alert("Submitted!"); return false;});
@@ -35,13 +37,13 @@
         function textpages(obj,page,pages) {
             $(obj).html(page + ' of ' + pages);
         }
-    </script>
-    <!-- Ajax Calls below-->
-    <script>
         $(document).ready(function() {
             $('.message a').click(function () {
                 $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
             });
+
+
+
             $('#reg').click(function () {
                 alert("entered");
                 var own = $('#oname').val();
@@ -54,16 +56,13 @@
                 var cuisine = $('#cuisine').val();
                 var pno = $('#pno').val();
                 var email = $('#eid').val();
-                var mi1 = $('#mi1').val();
-                var d1 = $('#d1').val();
-                var mi2 = $('#mi2').val();
-                var d2 = $('#d2').val();
-                var menuarray =[
-                    {"name": mi1,
-                        "description": d1,},
-                    {"name": mi2,
-                        "description" :d2}
-                ];
+
+                var menuarray=[];
+                for(var x = 1; x < c; x++){
+                    if($('#mi'+x).val() != ""){
+                        menuarray.push({"name" : $('#mi'+x).val(), "description" : $('#d'+x).val()});
+                    }
+                }
                 var formdata = {
                     "hotelname": rest,
                     "username": own,
@@ -78,6 +77,7 @@
                      "email":eid,
                      */
                 };
+
                 var input = JSON.stringify(formdata);
                 $.ajax({
                     type: "POST",
@@ -86,7 +86,7 @@
                     contentType: "application/json"
                 }).done(function (obj) {
                     if(obj.result == true)
-                        window.location ("dashboard.html");
+                        window.location = "dashboard.html";
                     else
                         alert("Failure");
                 }).fail(function (obj) {
@@ -94,20 +94,17 @@
                 });
             });
         });
-    </script>
-    <!-- End of Ajax calls code-->
-    <script>
         jQuery(function(){
-            var counter = 2;
             jQuery('a.add-item').click(function(event){
                 event.preventDefault();
                 var newRow = jQuery('<tr><td><input type="text" id="mi' +
-                    counter + '"/></td><td><input type="text" id="d' +
-                    counter + '"/></td></tr>');
-                counter++;
+                    c + '"/></td><td><input type="text" id="d' +
+                    c + '"/></td></tr>');
+                c++;
                 jQuery('table.menu-list').append(newRow);
             });
         });
+
     </script>
 
 </head>
@@ -175,17 +172,10 @@
                             <td>Menu Item</td><td>Description</td>
                         </tr>
 
-                        <tr>
-                            <td>
-                                <input type="text" id="mi1" />
-                            </td>
-                            <td>
-                                <input type="text" id="d1" />
-                            </td>
-                        </tr>
+
                     </table>
                     <div class="additembutton">
-                        <a href="#" title="" class="add-item">Add Another Item</a>
+                        <a href="#" title="" class="add-item">Add Menu Item</a>
                     </div>
                     <br/>
                     <div class="additembutton">
