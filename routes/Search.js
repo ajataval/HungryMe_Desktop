@@ -35,7 +35,7 @@ router.use('/search', function getUserLocation (req, res, next){
         if (!err) {
             res.geocode = geoResponse.json.results;
             address_list = geoResponse.json.results[0].address_components;
-
+            console.log("Users Current address is :: "+ geoResponse.json.results[0].formatted_address)
             for (var i = 0, len = address_list.length; i < len; i++) {
                 if(address_list[i].types[0]=="locality") {
                     req.user_city = address_list[i].long_name;
