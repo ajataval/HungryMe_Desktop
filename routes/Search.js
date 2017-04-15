@@ -20,6 +20,14 @@ router.get('/dummy', function (req, res, next) {
 
 // Get Users Address using lat long coordinates
 router.use('/search', function getUserLocation (req, res, next){
+
+    if (req.query.lat == undefined || req.query.lat==""
+            || req.query.long == undefined || req.query.long =="") {
+        err = new Error("Lat long cannot be empty");
+        err.status = 400;
+        next(err);
+    }
+
     // Get user address from LatLong.
     googleMapsClient.reverseGeocode({
         latlng: [req.query.lat,req.query.long]
