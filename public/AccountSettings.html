@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
           integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="stylesheets/visuals.css"/>
+    <link rel="stylesheet" href="stylesheets/visuals2.css"/>
     <script type="text/javascript" src="/bower_components/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript" src="/bower_components/js-cookie/src/js.cookie.js"></script>
     <script type="text/javascript" src="/bower_components/moment/min/moment.min.js"></script>
@@ -20,7 +20,7 @@
 
     <title>Account Settings</title>
     <script>
-        validateUserLogin();
+        //validateUserLogin();
         $(function () {
         $('#changePassword').click(function () {
             window.location = "ChangePassword.html"
@@ -71,13 +71,22 @@
     </script>
 </head>
 <body>
-<div class="banner">
-    <h1 style="color : white" align="center">Account Settings</h1>
-    <button type="button" class="btn btn-primary glyphicon glyphicon-log-out" id="logout">Logout</button>
+<div class="row">
+    <div class="banner">
+        <img class ="picstyle" src="../images/banner4.png" >
+
+        <img class ="picstyle2" id = "logout" src="../images/logout.png" >
+    </div>
+</div>
+
+    <div class="row">
+    <div class="banner">
+        <h1 style="color : white" align="center">Account Settings</h1>
+    </div>
 </div>
 
 <div class="container login-form">
-    <div class="alert alert-danger alert-dismissable" id="invAct" hidden="true"> <strong>Authentication Failed for Delete User</strong></div>
+    <div class="alert alert-danger alert-dismissable" id="invAct" hidden="true"> <strong>Authentication Failed for Delete</strong></div>
     <div class ='row'>
         <div class='col-md-12'>
             <div class="form-group">

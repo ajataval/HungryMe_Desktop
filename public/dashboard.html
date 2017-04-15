@@ -11,46 +11,14 @@
 	<script type="text/javascript" src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css" />
 	<script type="text/javascript" src="/javascripts/validateLogin.js"></script>
-	<script>
-		validateUserLogin();
-		function getCookie(cname) {
-            var name = cname + "=";
-            var decodedCookie = decodeURIComponent(document.cookie);
-            var ca = decodedCookie.split(';');
-            for(var i = 0; i < ca.length; i++) {
-                var c = ca[i];
-                while (c.charAt(0) == ' ') {
-                    c = c.substring(1);
-                }
-                if (c.indexOf(name) == 0) {
-                    return c.substring(name.length, c.length);
-                }
-            }
-            return "";
-        }
-        function checkCookie() {
-            var user=getCookie("username");
-            if (user != "") {
-                //alert("Welcome again " + user);
-            } else {
-                user = prompt("Please enter your name:","");
-                if (user != "" && user != null) {
-                    setCookie("username", user, 30);
-                }
-            }
-        }
-	</script>
-
 </head>
-<style>
-.inv {
-    display: none;
-}
-</style>
 <body>
-<div class="banner">
-	<img class ="picstyle" src="../images/banner4.png" >
-	<button type="button" class="btn btn-primary glyphicon glyphicon-log-out" id="logout">Logout</button>
+<div class="row">
+	<div class="banner">
+		<img class ="picstyle" src="../images/banner4.png" >
+
+		<img class ="picstyle2" id = "logout" src="../images/logout.png" >
+	</div>
 </div>
 </br>
 <p class = "genwebsitetext">Restaurant Owner Dashboard</p>

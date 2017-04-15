@@ -100,7 +100,11 @@
   */
 }
 .picstyle{
-  max-width: 99%;
+  max-width: 88%;
+  max-height: 99%;
+}
+.picstyle2{
+  max-width: 11%;
   max-height: 99%;
 }
 .or{

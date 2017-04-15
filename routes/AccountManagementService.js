@@ -416,7 +416,7 @@ var validateHotelUser = function (req,res,next){
             "password":password}
         ).then(function (success) {
             if(success == undefined)
-                res.json({"result":false, "message": "User validation failed"});
+                res.json({"result":false, "message":  "User validation failed"});
             else
                 next();
         }, function (err) {
@@ -441,8 +441,22 @@ router.delete('/hotel/users/:username', validateHotelUser, function (req, res, n
             db.collection('User').deleteOne( { "username" : username} ).then(function (success) {
                 if(success.deletedCount == 1) {
                     db.close();
-                    res.status(200);
-                    res.json({"result": true})
+                    MongoClient.connect(url, function (err, db) {
+                        db.collection('User').update(
+                            {},
+                            { $pull: { favorite: username } }
+                        ).then(function (success) {
+                            db.close();
+                            res.status(200);
+                            res.json({"result": true})
+                            next();
+                        }, function (err) {
+                            err = new Error("Could not remove  hotel from DB")
+                            err.status=400;
+                            db.close();
+                            next(err);
+                        });
+                    });
                 }
                 else
                 {

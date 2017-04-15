@@ -63,8 +63,10 @@ router.post("/offers/:username/happy_hour", inserthappyhour , getHotelUser, func
         err.status=500;
         next(err);
     }
+
+    var topic = "/topics/"+req.params.username.split("@")[0];
     var message = {
-            to: '/topics/'+req.params.username, // required fill with device token or topics
+            to: '/topics/'+topic, // required fill with device token or topics
             data:{
                 hotelname: req.hotelUser.hotelname,
                 hoteladdress: req.hotelUser.address,

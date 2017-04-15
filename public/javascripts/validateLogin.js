@@ -1,12 +1,11 @@
 /**
  * Created by KD on 4/13/2017.
  */
-function validateUserLogin() {
-    var user=Cookies.get("username");
+var user=Cookies.get("username");
     if (user == "" || user == undefined) {
         window.location = "index.html";
     }
-}
+
 $(function () {
         $('#logout').click(function () {
             Cookies.remove("username");
