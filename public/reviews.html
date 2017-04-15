@@ -4,6 +4,10 @@
     <title>Hotel Menu Update Page</title>
     <link rel="stylesheet" href="stylesheets/visuals2.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <script>
         var orlen;
@@ -35,15 +39,7 @@
                     contentType: "application/json"
                 }).done(function (obj) {
                     jobj=obj;
-                    //find length of menu array inside object 'l'
-                    orlen = obj.menu.length;
-                    var link=document.getElementById("aai");
-                    for(var temp = 1; temp <= orlen; temp++){
-                        link.click();
-                        $('#mi'+temp).val(obj.menu[temp-1].name);
-                        $('#d'+temp).val(obj.menu[temp-1].comments);
-
-                    }
+                    updateAcc();
                 }).fail(function (obj) {
                     alert("Failed");
                 });
@@ -54,92 +50,39 @@
                 }
             }
         }
+        function updateAcc() {
+            orlen = jobj.menu.length;
+            console.log(jobj);
+            var name;
+            for(var temp = 1; temp <= orlen; temp++){
+                name = jobj.menu[temp-1].name;
+                var comm="";
 
-        jQuery(function(){
-            jQuery('a.add-item').click(function(event){
-                event.preventDefault();
-                counter++;
-                var newRow = jQuery('<tr><td><input type="text" id="mi' +
-                    counter + '"/></td><td><input type="text" id="d' +
-                    counter + '"/></td></tr>');
-
-                jQuery('table.menu-list').append(newRow);
-            });
-        });
-
-        jQuery(function(){
-            jQuery('a.updatemenu').click(function(event){
-                event.preventDefault();
-                for(var x = orlen+1; x <= counter; x++){
-                    jobj['menu'].push({"name" : $('#mi'+x).val(), "description" : $('#d'+x).val()});
+                for(var temp2 = 1; temp2 <= jobj.menu[temp-1].comments.length; temp2++){
+                    comm+="\""+jobj.menu[temp-1].comments[temp2-1]+ "\"\n";
                 }
-                var t=JSON.stringify(jobj);
+                var accord="";
+                accord+="<h3>" + name + "</h3><div><p>" + comm + "</p></div>";
+                $('#accordion').append(accord);
+            }
+            $( "#accordion" ).accordion();
 
-                $.ajax({
-                    type: "PUT",
-                    url: "/hotel/users/"+user+"/menu",
-                    data: t,
-                    contentType: "application/json"
-                }).done(function (obj) {
-                    if(obj.result == true)
-                        alert("Success");
-                    else
-                        alert("Failure");
-                }).fail(function (obj) {
-                    alert("Failed");
-                });
-            });
-        });
-
-        $(function(){
-            $('#uploadBTN').on('click', function(){
-                var fd = new FormData($("#menuexcel"));
-                $.ajax({
-                    url: "/hotel/users/"+user+"/uploadMenu",
-                    type: 'POST',
-                    data: fd,
-                    success:function(data){
-                        alert("success");
-                    },
-                    cache: false,
-                    contentType: false,
-                    processData: false
-                });
-            });
-        });
+        };
 
     </script>
 </head>
 
 <body onload="checkCookie()">
 <div class="banner">
-    <img class ="picstyle" src="images/banner4.png"`` >
+    <img style="width: 95%" class ="picstyle" src="images/banner4.png" >
 </div>
 <br/>
-<p class = "genwebsitetext">Update Restaurant menu</p>
+<p class = "genwebsitetext">Restaurant Reviews and Comments</p>
 <br/>
-<div class="additemform">
 
-            <div id="content_2">
-                <form class="additemform">
-                    <table id = "itemtable" class="menu-list">
-
-                        <tr>
-                            <td>Menu Item</td><td>Description</td>
-                        </tr>
-                    </table>
-                    <div style="visibility: hidden">
-                    <table>
-                        <tr><td><a href="#" title="" class="add-item" id="aai">Add Another Item</a></td>
-                        </tr>
-                        <tr><td><a href="#" title="" class="updatemenu" id="mub">Update Menu</a></td>
-                        </tr>
-                    </table>
-                    </div>
-
-                </form>
-
-            </div>
+<div data-role="content" id="Div1">
+    <div id="accordion" data-role="collapsible-set"/>
+</div>
 
 </body>
 </html>
