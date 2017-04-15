@@ -20,12 +20,19 @@ router.get('/dummy', function (req, res, next) {
 
 // Get Users Address using lat long coordinates
 router.use('/search', function getUserLocation (req, res, next){
+
+    if (req.query.lat == undefined || req.query.lat==""
+            || req.query.long == undefined || req.query.long =="") {
+        err = new Error("Lat long cannot be empty");
+        err.status = 400;
+        next(err);
+    }
+
     // Get user address from LatLong.
     googleMapsClient.reverseGeocode({
         latlng: [req.query.lat,req.query.long]
     }, function(err, geoResponse) {
         if (!err) {
-            console.log(geoResponse.json.results);
             res.geocode = geoResponse.json.results;
             address_list = geoResponse.json.results[0].address_components;
 
@@ -50,7 +57,8 @@ router.use('/search', function getGoogleHotelList (req, res, next){
         rankby:"distance"
     }, function(err, geoResponse) {
         if (!err) {
-            console.log(geoResponse.json.results);
+            //console.log(geoResponse.json.results);
+            console.log("GoogleNearby API call successul");
             res.googleHotelList = geoResponse.json.results;
             next();
         }
@@ -74,6 +82,11 @@ router.use('/search', function getHungryMeHotelList (req, res, next){
     }
     else {
         //default city limited search
+        if(req.user_city == undefined || req.user_city == ""){
+            err = new Error("Server failed to get user current location");
+            err.status = 500;
+            next(err);
+        }
         searchfilter = {"address": {$regex:".*"+ req.user_city +".*", $options: 'i'}};
     }
 
@@ -120,7 +133,7 @@ router.use('/search', function getFilteredList (req, res, next){
             }
         }
     }
-    console.log(res.filteredList);
+    console.log("Total Hotels found near user: "+ res.filteredList.length);
     next();
 });
 
@@ -138,7 +151,7 @@ router.use('/search', function getDistance  (req, res, next){
         }
 
         dest = dest.substr(0, dest.length - 1)
-        console.log("Length : " + dest.length + "  ::::  dest: " + dest);
+        //console.log("Length : " + dest.length + "  ::::  dest: " + dest);
         //get distance from user current location to hotel
         googleMapsClient.distanceMatrix({
             origins: req.query.lat + ',' + req.query.long,
@@ -146,7 +159,8 @@ router.use('/search', function getDistance  (req, res, next){
             units: "imperial"
         }, function (err, geoResponse) {
             if (!err) {
-                console.log(geoResponse.json.rows[0].elements);
+                //console.log(geoResponse.json.rows[0].elements);
+                console.log("Google Distance Matrix api call successful")
                 res.googleDistanceList = geoResponse.json.rows[0].elements;
 
                 for (i = 0; i < res.filteredList.length; i++) {
