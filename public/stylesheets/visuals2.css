@@ -131,6 +131,16 @@
   text-align: center;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
+.additemform2 {
+
+  z-index: 1;
+  background: #FFFFFF;
+  margin: 0 auto 100px;
+  padding: 45px;
+  width:60%;
+  text-align: center;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
 .additemform input {
   font-family: "Roboto", sans-serif;
   outline: 0;
@@ -193,7 +203,7 @@
 	width: 84%;
 }
 #itemtable {
-    width: 80%;
+    width: 90%;
 	font-family: "Roboto", sans-serif;
 	text-align : center;
     margin: auto;
@@ -304,4 +314,17 @@ body {
 .buttonsmenu{
   margin-right: 0px;
   margin-left: auto;
+}
+
+.filepuload{
+
+}
+
+.uploadfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
 }

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/resources/demos/style.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script type="text/javascript" src="/javascripts/validateLogin.js"></script>
 
     <script>
         var orlen;
@@ -73,15 +74,20 @@
 </head>
 
 <body onload="checkCookie()">
-<div class="banner">
-    <img style="width: 95%" class ="picstyle" src="images/banner4.png" >
+<div class="row">
+    <div class="banner">
+        <img class ="picstyle" src="../images/banner4.png" >
+
+        <img class ="picstyle2" id = "logout" src="../images/logout.png" >
+    </div>
 </div>
 <br/>
 <p class = "genwebsitetext">Restaurant Reviews and Comments</p>
 <br/>
-
+<div class="dashboard">
 <div data-role="content" id="Div1">
     <div id="accordion" data-role="collapsible-set"/>
+</div>
 </div>
 
 </body>
