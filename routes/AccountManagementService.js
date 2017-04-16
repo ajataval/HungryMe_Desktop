@@ -174,6 +174,22 @@ var getHotelPlaceID = function(req, res, next){
                     next();
                 }
                 else if(response.json.status == "ZERO_RESULTS") {
+                    /*if(req.body.address.contains("#")){
+                        googleMapsClient.placesAutoComplete({
+                            input: req.body.hotelname + ',' + req.body.address,
+                            type: "establishment"
+                        }, function (err, response) {
+                            if (!err) {
+                                //console.log(response.json.results);
+                                if( response.json.status == "OK") {
+                                    req.body.place_id = response.json.predictions[0].place_id;
+                                    next();
+                                }
+                                else if(response.json.status == "ZERO_RESULTS") {
+
+                                }
+                            }
+                    }*/
                     err = new Error("Hotel address could not be validated.");
                     err.status = 400;
                     next(err);

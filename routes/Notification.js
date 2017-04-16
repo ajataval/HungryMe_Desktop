@@ -182,6 +182,7 @@ router.put("/app/users/:username/favorite", addFavoriteHotel , getUpdatedUser, f
     // The topic name can be optionally prefixed with "/topics/".
     var topic = "/topics/"+req.body.hotel.split("@")[0];
 
+    console.log("User will be subscribed to :: " + topic)
     // Subscribe the device corresponding to the registration token to the
     // topic.
     admin.messaging().subscribeToTopic(registrationToken, topic)

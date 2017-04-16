@@ -4,6 +4,8 @@
 	<title>Hotel Menu Update Page</title>
 	<link rel="stylesheet" href="stylesheets/visuals2.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="/bower_components/js-cookie/src/js.cookie.js"></script>
+	<script type="text/javascript" src="/javascripts/validateLogin.js"></script>
 
 	<script>
 		var orlen;
@@ -28,7 +30,6 @@
         function checkCookie() {
             user=getCookie("username");
             if (user != "") {
-                //alert("Welcome again " + user);
                 $.ajax({
                     type: "GET",
                     url: "/hotel/users/"+user+"/menu",
@@ -106,9 +107,11 @@
 	}
 </style>
 <body onload="checkCookie()">
-<div class="banner">
-	<img class ="picstyle" src="images/banner4.png" >
-	<button type="button" class="btn btn-primary glyphicon glyphicon-log-out" id="logout">Logout</button>
+<div class="row">
+	<div class="banner">
+		<img class ="picstyle" src="../images/banner4.png" id="home">
+		<img class ="picstyle2" id = "logout" src="../images/logout.png" >
+	</div>
 </div>
 <br/>
 <p class = "genwebsitetext">Update Restaurant menu</p>

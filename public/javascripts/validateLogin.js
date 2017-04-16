@@ -11,4 +11,9 @@ $(function () {
             Cookies.remove("username");
             window.location = "index.html"
         });
+
+    $('#home').click(function () {
+        window.location = "dashboard.html"
+    });
+
 })
