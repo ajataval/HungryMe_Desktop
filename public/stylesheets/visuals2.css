@@ -123,10 +123,10 @@
 	margin-right: auto ;
 }
 .additemform {
-  
+
   z-index: 1;
   background: #FFFFFF;
-  
+
   margin: 0 auto 100px;
   padding: 45px;
   text-align: center;
@@ -216,14 +216,14 @@ body {
     display: none;
 }
 .content_2{
-	
+
 }
 
 .dash button {
 
   font-family: "Roboto", sans-serif;
   text-transform: uppercase;
-  
+
   background: #4CAF50;
   width: 30%;
   margin-left: 35%;
@@ -246,7 +246,7 @@ body {
 
 .dashboard {
 	background: #FFFFFF;
-	
+
     margin: auto;
     width: 30%;
     padding: 10px;
@@ -321,6 +321,7 @@ body {
 
 }
 
+
 .uploadfile {
   width: 0.1px;
   height: 0.1px;
@@ -329,6 +330,7 @@ body {
   position: absolute;
   z-index: -1;
 }
+
 .robtext{
   font-family: "Roboto", sans-serif;
   font-size: 16px;

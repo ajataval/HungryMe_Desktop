@@ -11,7 +11,6 @@
 	<script type="text/javascript" src="/bower_components/js-cookie/src/js.cookie.js"></script>
 	<script type="text/javascript" src="/bower_components/moment/min/moment.min.js"></script>
 	<script type="text/javascript" src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-	<link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css" />
 	<script type="text/javascript" src="/javascripts/validateLogin.js"></script>
 
 	<script>
@@ -111,14 +110,14 @@
         });
         function removeMI(i) {
             var rn = i.replace( /^\D+/g, '');
+            var r=parseInt(rn);
             document.getElementById("itemtable").deleteRow(rn);
             deletemenu(rn);
         }
 
         function deletemenu(rn){
-            var r= parseInt(rn)+1;
+            var r= parseInt(rn)-1;
             jobj.menu.splice(r,1);
-            alert("removing record number "+r);
             var t=JSON.stringify(jobj);
             $.ajax({
                 type: "PUT",
@@ -126,12 +125,10 @@
                 data: t,
                 contentType: "application/json"
             }).done(function (obj) {
-                if(obj.result == true)
-                    alert("Success");
-                else
-                    alert("Failure");
+                if(obj.result == true){}
+                else{}
             }).fail(function (obj) {
-                alert("Failed");
+                
             });
         }
 
