@@ -3,8 +3,15 @@
 <head>
 	<title>Hotel Menu Update Page</title>
 	<link rel="stylesheet" href="stylesheets/visuals2.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+		  integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="stylesheets/visuals2.css"/>
+	<script type="text/javascript" src="/bower_components/jquery/dist/jquery.min.js"></script>
 	<script type="text/javascript" src="/bower_components/js-cookie/src/js.cookie.js"></script>
+	<script type="text/javascript" src="/bower_components/moment/min/moment.min.js"></script>
+	<script type="text/javascript" src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css" />
 	<script type="text/javascript" src="/javascripts/validateLogin.js"></script>
 
 	<script>
@@ -95,6 +102,7 @@
 
         jQuery(function(){
             jQuery('#uploadfile').click(function(event){
+
                 $("#uploadForm").attr("action", "/hotel/users/" + user + "/uploadMenu");
             });
         });
@@ -107,11 +115,9 @@
 	}
 </style>
 <body onload="checkCookie()">
-<div class="row">
-	<div class="banner">
+<div class="banner">
 		<img class ="picstyle" src="../images/banner4.png" id="home">
 		<img class ="picstyle2" id = "logout" src="../images/logout.png" >
-	</div>
 </div>
 <br/>
 <p class = "genwebsitetext">Update Restaurant menu</p>
@@ -133,9 +139,19 @@
 				  action='/hotel/users/hussain0306/uploadMenu'
 				  method='POST'
 				  encType="multipart/form-data">
-				<div class="filepuload">
-				<input type="file" name="menufile" style="width:30%"/>
-				<input type='submit' value='Upload!' style="width:10%"/>
+				<div class="row">
+				<div class="form-group col-sm-offset-3 col-sm-6">
+					<!--<input type="file" name="menufile" class="form-control"/>-->
+					<label class="custom-file">
+						<input type="file" name="menufile" class="custom-file-input">
+						<span class="custom-file-control"></span>
+					</label>
+				</div>
+				</div>
+				<div class="row">
+				<div class="form-group">
+					<input type='submit' value='Upload!'  id="uploadfile" class="btn btn-success"/>
+				</div>
 				</div>
 			</form>
 			</div>
