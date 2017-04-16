@@ -458,14 +458,13 @@ router.delete('/hotel/users/:username', validateHotelUser, function (req, res, n
                 if(success.deletedCount == 1) {
                     db.close();
                     MongoClient.connect(url, function (err, db) {
-                        db.collection('User').update(
+                        db.collection('User').updateMany(
                             {},
                             { $pull: { favorite: username } }
                         ).then(function (success) {
                             db.close();
                             res.status(200);
-                            res.json({"result": true})
-                            next();
+                            res.json({"result": true});
                         }, function (err) {
                             err = new Error("Could not remove  hotel from DB")
                             err.status=400;

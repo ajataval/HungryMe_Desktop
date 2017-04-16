@@ -51,8 +51,8 @@
                     contentType: "application/json"
                 }).done(function (obj) {
                     if (obj.result == true) {
-                        alert("User deleted successfully");
                         Cookies.remove('username')
+                        alert("User deleted successfully");
                         window.location = "index.html";
                     }
                     else{
