@@ -57,13 +57,20 @@
             var name;
             for(var temp = 1; temp <= orlen; temp++){
                 name = jobj.menu[temp-1].name;
-                var comm="";
-
+                var comm="", strs="<br>";
+                // **********************
+                strs += "<div class=\"star-ratings-sprite\"><span style=\"width:";
+                strs += jobj.menu[temp-1].review*20;
+                strs += "%;\" class=\"star-ratings-sprite-rating\"></span></div>";
+                strs += "<br>";
+                alert(strs);
+                // **********************
+                comm +="Rated " + jobj.menu[temp-1].review + " stars, out of " +jobj.menu[temp-1].count + " reviews<br><br>";
                 for(var temp2 = 1; temp2 <= jobj.menu[temp-1].comments.length; temp2++){
                     comm+="\""+jobj.menu[temp-1].comments[temp2-1]+ " \" <br> ";
                 }
                 var accord="";
-                accord+="<h3>" + name + "</h3><div><p>" + comm + "</p></div>";
+                accord+="<h3>" + name + "</h3><div>" + strs + "<p>" + comm + "</p></div>";
                 $('#accordion').append(accord);
             }
             $( "#accordion" ).accordion();
@@ -85,7 +92,7 @@
 <p class = "genwebsitetext">Restaurant Reviews and Comments</p>
 <br/>
 <div class="dashboard">
-<div data-role="content" id="Div1">
+<div data-role="content" class = "robtext" id="Div1">
     <div id="accordion" data-role="collapsible-set"/>
 </div>
 </div>

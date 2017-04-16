@@ -1,4 +1,5 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:300);
+@import "lesshat";
 
 .login-page {
   width: 360px;
@@ -327,4 +328,27 @@ body {
   overflow: hidden;
   position: absolute;
   z-index: -1;
+}
+.robtext{
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+}
+.star-ratings-sprite {
+  background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
+  font-size: 0;
+  height: 21px;
+  line-height: 0;
+  overflow: hidden;
+  text-indent: -999em;
+  width: 110px;
+  margin: 0 auto;
+
+&-rating {
+   background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
+   background-position: 0 100%;
+   float: left;
+   height: 21px;
+   display:block;
+ }
+
 }
