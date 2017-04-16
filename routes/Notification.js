@@ -98,7 +98,8 @@ router.post("/offers/:username/happy_hour", inserthappyhour , getHotelUser, func
 
 
 var addFavoriteHotel = function (req,res,next){
-
+    console.log("######################"+req.query.hotel)
+    console.log("######################"+req.query.registrationToken)
     if (req.body.hotel == undefined || req.body.hotel == ""
         || req.body.registrationToken == undefined || req.body.registrationToken == "") {
         err = new Error("Hotel/ Registration Token cannot be empty");
