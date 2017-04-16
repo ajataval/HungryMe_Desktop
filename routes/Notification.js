@@ -65,8 +65,9 @@ router.post("/offers/:username/happy_hour", inserthappyhour , getHotelUser, func
     }
 
     var topic = "/topics/"+req.params.username.split("@")[0];
+
     var message = {
-            to: '/topics/'+topic, // required fill with device token or topics
+            to: topic, // required fill with device token or topics
             data:{
                 hotelname: req.hotelUser.hotelname,
                 hoteladdress: req.hotelUser.address,
