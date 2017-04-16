@@ -15,9 +15,9 @@
 	<script type="text/javascript" src="/javascripts/validateLogin.js"></script>
 
 	<script>
-		var orlen;
-		var jobj;
-		var user;
+        var orlen;
+        var jobj;
+        var user;
         var counter = 0;
         function getCookie(cname) {
             var name = cname + "=";
@@ -44,14 +44,14 @@
                 }).done(function (obj) {
                     jobj=obj;
                     //find length of menu array inside object 'l'
-					orlen = obj.menu.length;
-					var link=document.getElementById("aai");
-					for(var temp = 1; temp <= orlen; temp++){
-					    link.click();
+                    orlen = obj.menu.length;
+                    var link=document.getElementById("aai");
+                    for(var temp = 1; temp <= orlen; temp++){
+                        link.click();
                         $('#mi'+temp).val(obj.menu[temp-1].name);
                         $('#d'+temp).val(obj.menu[temp-1].description);
 
-					}
+                    }
                 }).fail(function (obj) {
                     alert("Failed");
                 });
@@ -69,22 +69,25 @@
                 counter++;
                 var newRow = jQuery('<tr><td><input type="text" id="mi' +
                     counter + '"/></td><td><input type="text" id="d' +
+                    counter + '"/></td><td><input class = "delet" onclick="removeMI(this.id)" type="button" style="background: url(images/delete.png); background-repeat: no-repeat; white-space:nowrap;" id="del' +
                     counter + '"/></td></tr>');
 
                 jQuery('table.menu-list').append(newRow);
             });
         });
 
+
         jQuery(function(){
             jQuery('button.updatemenu').click(function(event){
                 event.preventDefault();
+                orlen = jobj.menu.length;
                 for(var x = orlen+1; x <= counter; x++){
                     if($('#mi'+x).val() !="")
-					jobj['menu'].push({"name" : $('#mi'+x).val(), "description" : $('#d'+x).val()});
-				}
+                        jobj['menu'].push({"name" : $('#mi'+x).val(), "description" : $('#d'+x).val()});
+                }
                 var t=JSON.stringify(jobj);
 
-				$.ajax({
+                $.ajax({
                     type: "PUT",
                     url: "/hotel/users/"+user+"/menu",
                     data: t,
@@ -106,6 +109,31 @@
                 $("#uploadForm").attr("action", "/hotel/users/" + user + "/uploadMenu");
             });
         });
+        function removeMI(i) {
+            var rn = i.replace( /^\D+/g, '');
+            document.getElementById("itemtable").deleteRow(rn);
+            deletemenu(rn);
+        }
+
+        function deletemenu(rn){
+            var r= parseInt(rn)+1;
+            jobj.menu.splice(r,1);
+            alert("removing record number "+r);
+            var t=JSON.stringify(jobj);
+            $.ajax({
+                type: "PUT",
+                url: "/hotel/users/"+user+"/menu",
+                data: t,
+                contentType: "application/json"
+            }).done(function (obj) {
+                if(obj.result == true)
+                    alert("Success");
+                else
+                    alert("Failure");
+            }).fail(function (obj) {
+                alert("Failed");
+            });
+        }
 
 	</script>
 </head>
@@ -116,8 +144,8 @@
 </style>
 <body onload="checkCookie()">
 <div class="banner">
-		<img class ="picstyle" src="../images/banner4.png" id="home">
-		<img class ="picstyle2" id = "logout" src="../images/logout.png" >
+	<img class ="picstyle" src="../images/banner4.png" id="home">
+	<img class ="picstyle2" id = "logout" src="../images/logout.png" >
 </div>
 <br/>
 <p class = "genwebsitetext">Update Restaurant menu</p>
@@ -128,18 +156,18 @@
 	<select class="dropdown" id="target">
 		<option value="">Select...</option>
 		<option value="content_1">Upload Excel Sheet</option>
-		<option value="content_2">Add Menu Item</option>
-		<select>
+		<option value="content_2">Update Menu Items</option>
+	</select>
 
-			<br/><br/><br/>
-			<!-- Content 1 Start -->
-			<div id="content_1" class="inv">
-			<form ref='uploadForm'
-				  id='uploadForm'
-				  action='/hotel/users/hussain0306/uploadMenu'
-				  method='POST'
-				  encType="multipart/form-data">
-				<div class="row">
+	<br/><br/><br/>
+	<!-- Content 1 Start -->
+	<div id="content_1" class="inv">
+		<form ref='uploadForm'
+			  id='uploadForm'
+			  action='/hotel/users/hussain0306/uploadMenu'
+			  method='POST'
+			  encType="multipart/form-data">
+			<div class="row">
 				<div class="form-group col-sm-offset-3 col-sm-6">
 					<!--<input type="file" name="menufile" class="form-control"/>-->
 					<label class="custom-file">
@@ -147,51 +175,52 @@
 						<span class="custom-file-control"></span>
 					</label>
 				</div>
-				</div>
-				<div class="row">
+			</div>
+			<div class="row">
 				<div class="form-group">
 					<input type='submit' value='Upload!'  id="uploadfile" class="btn btn-success"/>
 				</div>
-				</div>
-			</form>
 			</div>
-			<!-- Content 1 End-->
+		</form>
+	</div>
+	<!-- Content 1 End-->
 
-			<!-- Content 2 Start -->
-			<div id="content_2" class="inv">
-				<form class="additemform">
-					<table id = "itemtable" class="menu-list">
-						
-						<tr>
-							<td>Menu Item</td><td>Description</td>
-						</tr>
-					</table>
-					<table class="buttonsmenu">
-						<tr><td><button title="" class="add-item" id="aai">Add Another Item</button></td>
-						</tr>
-						<tr><td><button title="" class="updatemenu" id="mub">Update Menu</button></td>
-						</tr>
-					</table>
+	<!-- Content 2 Start -->
+	<div id="content_2" class="inv">
+		<form class="additemform">
+			<table id = "itemtable" class="menu-list">
 
-				</form>
+				<tr>
+					<td>Menu Item</td><td>Description</td>
+				</tr>
+			</table>
+			<table class="buttonsmenu">
+				<tr><td><button title="" class="add-item" id="aai">Add Another Item</button></td>
+				</tr>
+				<tr><td><button title="" class="updatemenu" id="mub">Update Menu</button></td>
+				</tr>
+			</table>
 
-			</div>
-			<!-- Content 2 End-->
+		</form>
 
-			<script>
-                document
-                    .getElementById('target')
-                    .addEventListener('change', function () {
-                        'use strict';
-                        var vis = document.querySelector('.vis'),
-                            target = document.getElementById(this.value);
-                        if (vis !== null) {
-                            vis.className = 'inv';
-                        }
-                        if (target !== null ) {
-                            target.className = 'vis';
-                        }
-                    });
-			</script>
+	</div>
+	<!-- Content 2 End-->
+
+	<script>
+        document
+            .getElementById('target')
+            .addEventListener('change', function () {
+                'use strict';
+                var vis = document.querySelector('.vis'),
+                    target = document.getElementById(this.value);
+                if (vis !== null) {
+                    vis.className = 'inv';
+                }
+                if (target !== null ) {
+                    target.className = 'vis';
+                }
+            });
+	</script>
+</div>
 </body>
 </html>
