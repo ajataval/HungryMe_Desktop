@@ -65,8 +65,9 @@ router.post("/offers/:username/happy_hour", inserthappyhour , getHotelUser, func
     }
 
     var topic = "/topics/"+req.params.username.split("@")[0];
+
     var message = {
-            to: '/topics/'+topic, // required fill with device token or topics
+            to: topic, // required fill with device token or topics
             data:{
                 hotelname: req.hotelUser.hotelname,
                 hoteladdress: req.hotelUser.address,
@@ -97,7 +98,8 @@ router.post("/offers/:username/happy_hour", inserthappyhour , getHotelUser, func
 
 
 var addFavoriteHotel = function (req,res,next){
-
+    console.log("######################"+req.query.hotel)
+    console.log("######################"+req.query.registrationToken)
     if (req.body.hotel == undefined || req.body.hotel == ""
         || req.body.registrationToken == undefined || req.body.registrationToken == "") {
         err = new Error("Hotel/ Registration Token cannot be empty");
@@ -182,6 +184,7 @@ router.put("/app/users/:username/favorite", addFavoriteHotel , getUpdatedUser, f
     // The topic name can be optionally prefixed with "/topics/".
     var topic = "/topics/"+req.body.hotel.split("@")[0];
 
+    console.log("User will be subscribed to :: " + topic)
     // Subscribe the device corresponding to the registration token to the
     // topic.
     admin.messaging().subscribeToTopic(registrationToken, topic)
