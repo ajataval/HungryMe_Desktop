@@ -115,8 +115,8 @@
 <br/>
 <div class="additemform">
 	<p></p>
-	<p>Please Select what you would like to do</p>
-	<select id="target">
+	<p class="dropdown">Please Select what you would like to do</p>
+	<select class="dropdown" id="target">
 		<option value="">Select...</option>
 		<option value="content_1">Upload Excel Sheet</option>
 		<option value="content_2">Add Menu Item</option>
@@ -130,8 +130,10 @@
 				  action='/hotel/users/hussain0306/uploadMenu'
 				  method='POST'
 				  encType="multipart/form-data">
-				<input type="file" name="menufile" />
-				<input type='submit' value='Upload!' id="uploadfile"/>
+
+				<input type="file" name="menufile" style="width:30%"/>
+				<input type='submit' value='Upload!' id="uploadfile" style="width:10%"/>
+
 			</form>
 			</div>
 			<!-- Content 1 End-->
@@ -145,7 +147,7 @@
 							<td>Menu Item</td><td>Description</td>
 						</tr>
 					</table>
-					<table>
+					<table class="buttonsmenu">
 						<tr><td><button title="" class="add-item" id="aai">Add Another Item</button></td>
 						</tr>
 						<tr><td><button title="" class="updatemenu" id="mub">Update Menu</button></td>

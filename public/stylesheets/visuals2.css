@@ -177,9 +177,12 @@
 }
 .genwebsitetext{
 	font-family: "Roboto", sans-serif;
-	font-size: 20px;
-	color : white;
-	font-weight : bold;
+	font-size: 30px;
+	color : green;
+	font-weight : bolder;
+  text-align: center;
+  padding: 12px;
+  background: #FFFFFF;
 }
 .pagecontents{
 	width: 80%;
@@ -193,6 +196,7 @@
     width: 80%;
 	font-family: "Roboto", sans-serif;
 	text-align : center;
+    margin: auto;
 }
 body {
   background-image: url(../images/food.png);
@@ -278,7 +282,7 @@ body {
 }
 .dropdown{
   font-family: "Roboto", sans-serif;
-  font-size: 24px;
+  font-size: 18px;
 }
 .dashstyle{
   width: 100%;
@@ -295,6 +299,9 @@ body {
   background: #FFFFFF;
   margin: auto;
   width: 80%;
-
   padding: 10px;
+}
+.buttonsmenu{
+  margin-right: 0px;
+  margin-left: auto;
 }
