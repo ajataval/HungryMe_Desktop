@@ -329,6 +329,7 @@ body {
   overflow: hidden;
   position: absolute;
   z-index: -1;
+  border-radius: 0%;
 }
 
 .robtext{
@@ -383,6 +384,8 @@ body {
   -webkit-transition: all 0.3 ease;
   transition: all 0.3 ease;
   cursor: pointer;
+  border-radius: 0%;
+
 }
 
 .form-group button {
@@ -397,6 +400,7 @@ body {
   -webkit-transition: all 0.3 ease;
   transition: all 0.3 ease;
   cursor: pointer;
+  border-radius: 0%;
 }
 
 #deleteHotel{
@@ -411,4 +415,18 @@ body {
   -webkit-transition: all 0.3 ease;
   transition: all 0.3 ease;
   cursor: pointer;
+  border-radius: 0%;
+}
+
+.textfields{
+  border: 5px solid black;
+}
+#stdate, #endate, #ff, #cf1, #cf2{
+  font-family: "Roboto", sans-serif;
+  outline: 0;
+  background: #f2f2f2;
+  border: none;
+  box-sizing: border-box;
+  font-size: 14px;
+  border-radius: 0%;
 }
