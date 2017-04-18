@@ -421,7 +421,7 @@ body {
 .textfields{
   border: 5px solid black;
 }
-#stdate, #endate, #ff, #cf1, #cf2{
+#stdate, #endate, #ff, #cf1, #cf2, #message{
   font-family: "Roboto", sans-serif;
   outline: 0;
   background: #f2f2f2;
