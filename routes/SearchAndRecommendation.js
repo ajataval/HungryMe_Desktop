@@ -19,7 +19,7 @@ router.get('/dummy', function (req, res, next) {
 });
 
 // Get Users Address using lat long coordinates
-router.use('/search', function getUserLocation (req, res, next){
+var getUserLocation = function(req, res, next) {
 
     if (req.query.lat == undefined || req.query.lat==""
             || req.query.long == undefined || req.query.long =="") {
@@ -45,10 +45,10 @@ router.use('/search', function getUserLocation (req, res, next){
             next();
         }
     });
-});
+}
 
 // Get Nearby Hotels from google's NearbyAPI
-router.use('/search', function getGoogleHotelList (req, res, next){
+var getGoogleHotelList = function(req, res, next){
     // Get user address from LatLong.
     googleMapsClient.placesNearby({
         location: [req.query.lat,req.query.long],
@@ -65,11 +65,11 @@ router.use('/search', function getGoogleHotelList (req, res, next){
         else
             next(err);
     });
-});
+}
 
 
 //apply user filters to obtain list of hotels from hungryMe DB
-router.use('/search', function getHungryMeHotelList (req, res, next){
+var getHungryMeHotelList = function(req, res, next){
     var searchfilter = {};
 
     if(req.query.cuisine !== undefined){
@@ -94,10 +94,10 @@ router.use('/search', function getHungryMeHotelList (req, res, next){
         res.hungryMeDbList = docs;
         next();
     });
-});
+}
 
 // Get Hotels present in both list.
-router.use('/search', function getFilteredList (req, res, next){
+var getFilteredList = function (req, res, next){
 
     var map = {};
     res.filteredList = [];
@@ -135,10 +135,10 @@ router.use('/search', function getFilteredList (req, res, next){
     }
     console.log("Total Hotels found near user: "+ res.filteredList.length);
     next();
-});
+}
 
 
-router.use('/search', function getDistance  (req, res, next){
+var getDistance = function (req, res, next){
 
     if(res.filteredList.length == 0){
         next();
@@ -173,9 +173,51 @@ router.use('/search', function getDistance  (req, res, next){
                 next(err);
         });
     }
-});
+}
 //Get List of Hotels based on user location and preferences
-router.get('/search', function (req, res, next) {
+router.get('/search',getUserLocation, getGoogleHotelList, getHungryMeHotelList, getFilteredList, getDistance,function (req, res, next) {
+    res.send(res.filteredList);
+});
+
+
+//apply user filters to obtain list of hotels from hungryMe DB
+var getUserPreferedHotelList = function(req, res, next){
+
+    var username = req.params.username
+    var searchfilter = {};
+
+
+    collection.find({"username":username})
+            .then(function (success) {
+                var appUser = success[0]
+                var cuisineArray = []
+
+                if(appUser.revCuisine != undefined) {
+                    for (i = 0; i < appUser.revCuisine.length; i++) {
+                        cuisineArray.push(appUser.revCuisine[i].cuisine)
+                    }
+
+                    if (cuisineArray.length > 0) {
+                        searchfilter = {"cuisine": {$in: cuisineArray}};
+                    }
+                }
+                else {
+                    searchfilter = {"address": {$regex:".*"+ req.user_city +".*", $options: 'i'}};
+                }
+
+                collection.find(searchfilter).then(function (docs){
+                    res.hungryMeDbList = docs;
+                    next();
+                });
+
+            }, function (err) {
+                err = new Error("Server Error while searching for "+ username);
+                err.status=500;
+                db.close();
+                next(err);
+            });
+}
+router.get('/app/users/:username/recommend',getUserLocation, getGoogleHotelList, getUserPreferedHotelList, getFilteredList, getDistance,function (req, res, next) {
     res.send(res.filteredList);
 });
 
