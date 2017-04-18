@@ -197,7 +197,7 @@ var getHotelPlaceID = function(req, res, next){
                 else {
                     console.log(response);
                     err = new Error("There was an error on the server.");
-                    err.status = 503;
+                    err.status = 500;
                     next(err);
                 }
             }
