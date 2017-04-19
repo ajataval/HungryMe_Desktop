@@ -336,6 +336,11 @@ body {
   font-family: "Roboto", sans-serif;
   font-size: 16px;
 }
+.robtext2{
+  font-family: "Roboto", sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+}
 .star-ratings-sprite {
   background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/2605/star-rating-sprite.png") repeat-x;
   font-size: 0;
