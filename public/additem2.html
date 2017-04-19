@@ -132,6 +132,37 @@
             });
         }
 
+        jQuery(function(){
+            jQuery('#what').click(function(event){
+				var fordat= new FormData($("#guestForm")[0]);
+				$.ajax({
+                    type: "POST",
+                    url: "/hotel/users/"+user+"/uploadMenu",
+                    data: fordat,
+                    contentType: false,
+
+                    processData: false
+                }).done(function (obj) {
+                    if(obj.result == true)
+                        alert("File Uploaded success");
+                    else
+                        alert("Failure");
+                }).fail(function (obj) {
+                    alert("Failed");
+                });
+            });
+        });
+
+
+        jQuery(function(){
+            $("#menuFile").change(function(){
+                var tname = document.getElementById("menuFile").value;
+                var filepath = document.getElementById('filepath');
+                filepath.innerHTML = "<br>File Selected for Upload : " + tname;
+            });
+        });
+
+
 	</script>
 </head>
 <style>
@@ -159,25 +190,12 @@
 	<br/><br/><br/>
 	<!-- Content 1 Start -->
 	<div id="content_1" class="inv">
-		<form ref='uploadForm'
-			  id='uploadForm'
-			  action='/hotel/users/hussain0306/uploadMenu'
-			  method='POST'
-			  encType="multipart/form-data">
-			<div class="row">
-				<div class="form-group col-sm-offset-3 col-sm-6">
-					<!--<input type="file" name="menufile" class="form-control"/>-->
-					<label class="custom-file">
-						<input type="file" name="menufile" class="custom-file-input">
-						<span class="custom-file-control"></span>
-					</label>
-				</div>
-			</div>
-			<div class="row">
-				<div class="form-group">
-					<input type='submit' value='Upload'  id="uploadfile" class="btn btn-success"/>
-				</div>
-			</div>
+		<form id="guestForm" >
+			<br><br>
+		<input type="file" id="menuFile" name="menufile" class = "inputfile" />
+			<label for="menuFile">Choose a file</label>
+			<p class ="robtext" id="filepath"></p>
+		<input type="button" value="submit" id="what" />
 		</form>
 	</div>
 	<!-- Content 1 End-->

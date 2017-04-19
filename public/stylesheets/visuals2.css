@@ -430,3 +430,66 @@ body {
   font-size: 14px;
   border-radius: 0%;
 }
+
+#what{
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+
+  background: #4CAF50;
+  margin-left: 35%;
+  margin-right: 35%;
+  margin-top : 5%;
+  margin-bottom : 2.5%;
+  border: 0;
+  padding: 15px;
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight:bold;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+
+#menuFile{
+  font-family: "Roboto", sans-serif;
+  outline: 0;
+  background: #f2f2f2;
+  border: none;
+  box-sizing: border-box;
+  font-size: 14px;
+  padding: 50;
+  border-radius: 0%;
+}
+
+.inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  z-index: -1;
+  cursor: pointer;
+}
+
+.inputfile + label {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+
+  background: deepskyblue;
+  margin-left: 35%;
+  margin-right: 35%;
+  margin-top : 5%;
+  margin-bottom : 2.5%;
+  border: 0;
+  padding: 15px;
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight:bold;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover {
+  background-color: dodgerblue;
+}
