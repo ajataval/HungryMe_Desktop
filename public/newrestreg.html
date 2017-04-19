@@ -45,7 +45,6 @@
 
 
             $('#reg').click(function () {
-                alert("entered");
                 var own = $('#oname').val();
                 var rest = $('#rname').val();
                 var pass = $('#pswd').val();
@@ -85,8 +84,10 @@
                     data: input,
                     contentType: "application/json"
                 }).done(function (obj) {
-                    if(obj.result == true)
+                    if(obj.result == true){
+                        alert("Restaurant Registered Successfully");
                         window.location = "dashboard.html";
+                    }
                     else
                         alert("Failure");
                 }).fail(function (obj) {
@@ -173,7 +174,7 @@
                         </tr>
 
 
-                    </table>
+                    </table><br>
                     <div class="additembutton">
                         <a href="#" title="" class="add-item">Add Menu Item</a>
                     </div>
