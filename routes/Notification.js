@@ -14,10 +14,8 @@ var serverKey = process.env.FCM_SERVER_KEY;
 var fcm = new FCM(serverKey);
 
 var admin = require("firebase-admin");
-//var serviceAccount = require(__dirname+"/hungry-me-e36d3-firebase-adminsdk-90xb4-e224473559.json");
 var admin_key = "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDH9svovXQj2oPB\nitgnlJT8nrurtR8uUKuqT85gXTdUY0RLl2wQNaLYJCf+A/yqXKfg6lT1w8u6spDd\nC7ktqtt0BHW42B5y/ROOLdlgKD8KdpGWbCsFyKtR22KRYDa5+ijCJDH/LyxiJmUW\njH1wUc75KTaQAslAQYsYycO4P+kZJ/2T7n8FkF9wjGZQEZ0cfKQrhsL4csQ2XVM1\nuI9i/VNmme3ih9FdHHTOpaZpt0SI5Httz/xuBxHkh4n2Um/kT4cFy7BY5VTTsBbM\nx5V/BB1jpKi9iKHismMoEXHvxBG5QWoH7oaP0YdYHMrY4VeJsysLvoWPU4BR2PV8\noG6EF2MdAgMBAAECggEBAI/fGO02yoY1ZVDuhgFMXTm5N4wef/XB4xFh5DnfN70G\nww+kPgMXpDfhI8kWs0cb7UndMA23tzB349S256Bc6xJ5Vv4MuTPAtL46bMlLi7gK\ngUt6PiYmMGVv9GZmlFmRDJxKkJJrLYLc3ySvJl2W7tTEe1Z4OrZ5sgu+t4wsp5kJ\nrz+Y53SPkficHBP1ddyt35x3HCnJ6G13ROB5wHaNtO+fQiv2ydKzlJp1EjaXMOke\nPB2NH0F5xP2HZdBctVLV+3DMPWarv15pTRJuzvQo04g8MGcg05fRnPjDutl9X0YS\n2HiNhB1MzW8cmAA+F+ZCX2sPzcV6B5Pv0PqY8kFnfUECgYEA9SkFIPciB3O6nV1h\nKktKVjEUzmSVrGqVeQfqpZ8M7kTImuVqm2z3Y+mWaYTzUjKSpV9lKFs0UayF7L8i\nZw1i+sqWvrX7Xv7jNuaFPg8j1vVi8YG+dyJIDtvQd7Y/eyvUUopkNF33UlQ5h+Bp\n8+Bc6qSgyBoqmM0YcwLuqha55/ECgYEA0M4y43Kb+mYwDBsk7Rdliw9F1xp2Xfta\nNuYp2xrlhfRyAYdeA5XqcisaQV/ebV7dRXgAd597K8NMrOxh1nLj+qZ0p1mafmqk\nChn/3BTx1w05KVHWEFGv4K1NHRhGLRE+sQCgeUezHQNxQSymlB1Vl0nO+Z8ur6Rf\n40ev4lnHOe0CgYEAwUWPZ4es6hcQXZMKUN9+QSj8cCHX5U85e2sET4FuHkFXrNWE\nD/f9qGS0UYegk4KPHZRxGTmdq23JPvUH2Bozl+cypDKvcxqaYeOl02D4LjTRxfc1\nApKiICSm2llw/ld1UYUMrkQOAHepyzbeEIcmeU1D+7y1LDU0Oydqo+i6suECgYEA\nzcaH7BKkmO5f525Qw77M+XBBuayAfjoZPAUztpQZIhw2xj7rbckuVPkZVNfv0gUt\nNyr9+uWWcxhy1e/Ws4piFkA4sjvhvzfFFZdtySxy8SY88PWPamG2XEsttcCYWA2o\npLMjcqIwaCVeVYZ1W35VPVUlvmcbkUkCnm+lbAJiDjkCgYALzTECit6XNl7x8Oy0\nEeUXyTq20ClD3ROGPmBKfLYf3jQXkkb8Umze5frhZ9ts0b95p7CSGmYVIdVOkc73\nOr4FS+XzZDfu7rXqi1YDN+Nqb8brRKVwXqlwndUQdQT4bmlLaeexl84wXN45psed\nKaTYnxuzFaW/pWJfHDtTSVSlbQ=="
 
-console.log(process.env.GOOG_FCM_PRV_KEY.toString())
 admin.initializeApp({
     credential: admin.credential.cert({
         projectId: process.env.GOOG_PRJ_ID,
@@ -26,11 +24,6 @@ admin.initializeApp({
     }),
     databaseURL: process.env.GOOG_FCM_DB_URL
 });
-
-/*admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://hungry-me-e36d3.firebaseio.com/"
-});*/
 
 var inserthappyhour = function (req,res,next){
     req.body.username = req.params.username;
