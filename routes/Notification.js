@@ -22,8 +22,7 @@ admin.initializeApp({
     credential: admin.credential.cert({
         projectId: process.env.GOOG_PRJ_ID,
         clientEmail: process.env.GOOG_FCM_CLIENT,
-        privateKey: "-----BEGIN PRIVATE KEY-----\n"+process.env.GOOG_FCM_PRV_KEY+"\n-----END PRIVATE KEY-----\n"
-        //privateKey: "-----BEGIN PRIVATE KEY-----\n"+admin_key+"\n-----END PRIVATE KEY-----\n"
+        privateKey: "-----BEGIN PRIVATE KEY-----\n"+admin_key+"\n-----END PRIVATE KEY-----\n"
     }),
     databaseURL: process.env.GOOG_FCM_DB_URL
 });
